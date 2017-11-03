@@ -21,21 +21,21 @@ Game::~Game() {
 void Game::Triangle(float size, float x, float y) {
 	quadData[7 * 0 + 0] = -1.0f * size + x;
 	quadData[7 * 0 + 1] = -1.0f * size + y;
-	quadData[7 * 0 + 2] = 0.0f * size;
+	quadData[7 * 0 + 2] = 1.0f;
 	quadData[7 * 0 + 3] = 1.0f;
 	quadData[7 * 0 + 4] = 1.0f;
 	quadData[7 * 0 + 5] = 1.0f;
 	quadData[7 * 0 + 6] = 1.0f;
 	quadData[7 * 1 + 0] = 1.0f * size + x;
 	quadData[7 * 1 + 1] = -1.0f * size + y;
-	quadData[7 * 1 + 2] = 0.0f * size;
+	quadData[7 * 1 + 2] = 1.0f;
 	quadData[7 * 1 + 3] = 1.0f;
 	quadData[7 * 1 + 4] = 1.0f;
 	quadData[7 * 1 + 5] = 1.0f;
 	quadData[7 * 1 + 6] = 1.0f;
 	quadData[7 * 2 + 0] = 0.0f * size + x;
 	quadData[7 * 2 + 1] = 1.0f * size + y;
-	quadData[7 * 2 + 2] = 0.0f * size;
+	quadData[7 * 2 + 2] = 1.0f;
 	quadData[7 * 2 + 3] = 1.0f;
 	quadData[7 * 2 + 4] = 0.0f;
 	quadData[7 * 2 + 5] = 0.0f;
@@ -52,7 +52,7 @@ void Game::tick() {
 
 	t += dt;
 	if (t > TAU) t -= TAU;
-	Triangle(0.25f, cos(t), sin(t));
+	Triangle(3.0f, 3.0f * cos(t) + 5.0f, 3.0f * sin(t) + 5.0f);
 }
 
 void Game::render() {

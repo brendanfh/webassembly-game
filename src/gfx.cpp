@@ -22,11 +22,12 @@ void Gfx::Initialize() {
 	char vertShaderSrc[] =
 		"attribute vec3 aPosition; \n"
 		"attribute vec4 aColor;    \n"
+		"uniform mat4 uProjection; \n"
 		"varying vec4 vColor;      \n"
 		"\n"
 		"void main() {\n"
 		"   vColor = aColor;"
-		"	gl_Position = vec4(aPosition, 1.0);\n"
+		"	gl_Position = uProjection * vec4(aPosition, 1.0);\n"
 		"}";
 
 	char fragShaderSrc[] =
@@ -45,6 +46,11 @@ void Gfx::Initialize() {
 	glBindAttribLocation(program, 0, "aPosition");
 	glBindAttribLocation(program, 1, "aColor");
 	glUseProgram(program);
+
+	GLuint projUniform = glGetUniformLocation(program, "uProjection");
+
+	glm::mat4x4 proj = glm::ortho(0.0f, 10.0f, 10.0f, 0.0f, -0.1f, -1000.0f);
+	glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 GLuint Gfx::CompileShader(GLenum shaderType, const char *shaderSrc) {

@@ -2007,7 +2007,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = Runtime.GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 25072;
+STATICTOP = STATIC_BASE + 25296;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
 
 
@@ -2016,7 +2016,7 @@ memoryInitializer = null;
 
 
 
-var STATIC_BUMP = 25072;
+var STATIC_BUMP = 25296;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
@@ -5521,9 +5521,16 @@ function copyTempDouble(ptr) {
   
     }
 
-  function ___assert_fail(condition, filename, line, func) {
-      ABORT = true;
-      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [filename ? Pointer_stringify(filename) : 'unknown filename', line, func ? Pointer_stringify(func) : 'unknown function'] + ' at ' + stackTrace();
+  function _glGetProgramInfoLog(program, maxLength, length, infoLog) {
+      var log = GLctx.getProgramInfoLog(GL.programs[program]);
+      if (log === null) log = '(unknown error)';
+  
+      if (maxLength > 0 && infoLog) {
+        var numBytesWrittenExclNull = stringToUTF8(log, infoLog, maxLength);
+        if (length) HEAP32[((length)>>2)]=numBytesWrittenExclNull;
+      } else {
+        if (length) HEAP32[((length)>>2)]=0;
+      }
     }
 
   
@@ -7229,144 +7236,6 @@ function copyTempDouble(ptr) {
 
    
 
-   
-
-  function ___gxx_personality_v0() {
-    }
-
-  function _glfwInit() {
-      if (GLFW.windows) return 1; // GL_TRUE
-  
-      GLFW.initialTime = GLFW.getTime();
-      GLFW.hints = GLFW.defaultHints;
-      GLFW.windows = new Array()
-      GLFW.active = null;
-  
-      window.addEventListener("gamepadconnected", GLFW.onGamepadConnected, true);
-      window.addEventListener("gamepaddisconnected", GLFW.onGamepadDisconnected, true);
-      window.addEventListener("keydown", GLFW.onKeydown, true);
-      window.addEventListener("keypress", GLFW.onKeyPress, true);
-      window.addEventListener("keyup", GLFW.onKeyup, true);
-      window.addEventListener("blur", GLFW.onBlur, true);
-      Module["canvas"].addEventListener("mousemove", GLFW.onMousemove, true);
-      Module["canvas"].addEventListener("mousedown", GLFW.onMouseButtonDown, true);
-      Module["canvas"].addEventListener("mouseup", GLFW.onMouseButtonUp, true);
-      Module["canvas"].addEventListener('wheel', GLFW.onMouseWheel, true);
-      Module["canvas"].addEventListener('mousewheel', GLFW.onMouseWheel, true);
-      Module["canvas"].addEventListener('mouseenter', GLFW.onMouseenter, true);
-      Module["canvas"].addEventListener('mouseleave', GLFW.onMouseleave, true);
-      Module["canvas"].addEventListener('drop', GLFW.onDrop, true);
-      Module["canvas"].addEventListener('dragover', GLFW.onDragover, true);
-  
-      Browser.resizeListeners.push(function(width, height) {
-         GLFW.onCanvasResize(width, height);
-      });
-      return 1; // GL_TRUE
-    }
-
-  function _pthread_cond_wait() { return 0; }
-
-  function ___cxa_rethrow() {
-      var ptr = EXCEPTIONS.caught.pop();
-      if (!EXCEPTIONS.infos[ptr].rethrown) {
-        // Only pop if the corresponding push was through rethrow_primary_exception
-        EXCEPTIONS.caught.push(ptr)
-        EXCEPTIONS.infos[ptr].rethrown = true;
-      }
-      EXCEPTIONS.last = ptr;
-      throw ptr;
-    }
-
-   
-
-
-  function _glCreateShader(shaderType) {
-      var id = GL.getNewId(GL.shaders);
-      GL.shaders[id] = GLctx.createShader(shaderType);
-      return id;
-    }
-
-  function _glGetProgramInfoLog(program, maxLength, length, infoLog) {
-      var log = GLctx.getProgramInfoLog(GL.programs[program]);
-      if (log === null) log = '(unknown error)';
-  
-      if (maxLength > 0 && infoLog) {
-        var numBytesWrittenExclNull = stringToUTF8(log, infoLog, maxLength);
-        if (length) HEAP32[((length)>>2)]=numBytesWrittenExclNull;
-      } else {
-        if (length) HEAP32[((length)>>2)]=0;
-      }
-    }
-
-   
-
-  function _glGetProgramiv(program, pname, p) {
-      if (!p) {
-        // GLES2 specification does not specify how to behave if p is a null pointer. Since calling this function does not make sense
-        // if p == null, issue a GL error to notify user about it. 
-        GL.recordError(0x0501 /* GL_INVALID_VALUE */);
-        return;
-      }
-  
-      if (program >= GL.counter) {
-        GL.recordError(0x0501 /* GL_INVALID_VALUE */);
-        return;
-      }
-  
-      var ptable = GL.programInfos[program];
-      if (!ptable) {
-        GL.recordError(0x0502 /* GL_INVALID_OPERATION */);
-        return;
-      }
-  
-      if (pname == 0x8B84) { // GL_INFO_LOG_LENGTH
-        var log = GLctx.getProgramInfoLog(GL.programs[program]);
-        if (log === null) log = '(unknown error)';
-        HEAP32[((p)>>2)]=log.length + 1;
-      } else if (pname == 0x8B87 /* GL_ACTIVE_UNIFORM_MAX_LENGTH */) {
-        HEAP32[((p)>>2)]=ptable.maxUniformLength;
-      } else if (pname == 0x8B8A /* GL_ACTIVE_ATTRIBUTE_MAX_LENGTH */) {
-        if (ptable.maxAttributeLength == -1) {
-          var program = GL.programs[program];
-          var numAttribs = GLctx.getProgramParameter(program, GLctx.ACTIVE_ATTRIBUTES);
-          ptable.maxAttributeLength = 0; // Spec says if there are no active attribs, 0 must be returned.
-          for (var i = 0; i < numAttribs; ++i) {
-            var activeAttrib = GLctx.getActiveAttrib(program, i);
-            ptable.maxAttributeLength = Math.max(ptable.maxAttributeLength, activeAttrib.name.length+1);
-          }
-        }
-        HEAP32[((p)>>2)]=ptable.maxAttributeLength;
-      } else if (pname == 0x8A35 /* GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH */) {
-        if (ptable.maxUniformBlockNameLength == -1) {
-          var program = GL.programs[program];
-          var numBlocks = GLctx.getProgramParameter(program, GLctx.ACTIVE_UNIFORM_BLOCKS);
-          ptable.maxUniformBlockNameLength = 0;
-          for (var i = 0; i < numBlocks; ++i) {
-            var activeBlockName = GLctx.getActiveUniformBlockName(program, i);
-            ptable.maxUniformBlockNameLength = Math.max(ptable.maxUniformBlockNameLength, activeBlockName.length+1);
-          }
-        }
-        HEAP32[((p)>>2)]=ptable.maxUniformBlockNameLength;
-      } else {
-        HEAP32[((p)>>2)]=GLctx.getProgramParameter(GL.programs[program], pname);
-      }
-    }
-
-  function _glVertexAttribPointer(index, size, type, normalized, stride, ptr) {
-      GLctx.vertexAttribPointer(index, size, type, !!normalized, stride, ptr);
-    }
-
-  function _glGetShaderInfoLog(shader, maxLength, length, infoLog) {
-      var log = GLctx.getShaderInfoLog(GL.shaders[shader]);
-      if (log === null) log = '(unknown error)';
-      if (maxLength > 0 && infoLog) {
-        var numBytesWrittenExclNull = stringToUTF8(log, infoLog, maxLength);
-        if (length) HEAP32[((length)>>2)]=numBytesWrittenExclNull;
-      } else {
-        if (length) HEAP32[((length)>>2)]=0;
-      }
-    }
-
   
   
   function __isLeapYear(year) {
@@ -7709,12 +7578,173 @@ function copyTempDouble(ptr) {
       return _strftime(s, maxsize, format, tm); // no locale support yet
     }
 
+   
+
+  function ___gxx_personality_v0() {
+    }
+
+  function _glfwInit() {
+      if (GLFW.windows) return 1; // GL_TRUE
+  
+      GLFW.initialTime = GLFW.getTime();
+      GLFW.hints = GLFW.defaultHints;
+      GLFW.windows = new Array()
+      GLFW.active = null;
+  
+      window.addEventListener("gamepadconnected", GLFW.onGamepadConnected, true);
+      window.addEventListener("gamepaddisconnected", GLFW.onGamepadDisconnected, true);
+      window.addEventListener("keydown", GLFW.onKeydown, true);
+      window.addEventListener("keypress", GLFW.onKeyPress, true);
+      window.addEventListener("keyup", GLFW.onKeyup, true);
+      window.addEventListener("blur", GLFW.onBlur, true);
+      Module["canvas"].addEventListener("mousemove", GLFW.onMousemove, true);
+      Module["canvas"].addEventListener("mousedown", GLFW.onMouseButtonDown, true);
+      Module["canvas"].addEventListener("mouseup", GLFW.onMouseButtonUp, true);
+      Module["canvas"].addEventListener('wheel', GLFW.onMouseWheel, true);
+      Module["canvas"].addEventListener('mousewheel', GLFW.onMouseWheel, true);
+      Module["canvas"].addEventListener('mouseenter', GLFW.onMouseenter, true);
+      Module["canvas"].addEventListener('mouseleave', GLFW.onMouseleave, true);
+      Module["canvas"].addEventListener('drop', GLFW.onDrop, true);
+      Module["canvas"].addEventListener('dragover', GLFW.onDragover, true);
+  
+      Browser.resizeListeners.push(function(width, height) {
+         GLFW.onCanvasResize(width, height);
+      });
+      return 1; // GL_TRUE
+    }
+
+  function _pthread_cond_wait() { return 0; }
+
+  function ___cxa_rethrow() {
+      var ptr = EXCEPTIONS.caught.pop();
+      if (!EXCEPTIONS.infos[ptr].rethrown) {
+        // Only pop if the corresponding push was through rethrow_primary_exception
+        EXCEPTIONS.caught.push(ptr)
+        EXCEPTIONS.infos[ptr].rethrown = true;
+      }
+      EXCEPTIONS.last = ptr;
+      throw ptr;
+    }
+
+   
+
+
+  function _glCreateShader(shaderType) {
+      var id = GL.getNewId(GL.shaders);
+      GL.shaders[id] = GLctx.createShader(shaderType);
+      return id;
+    }
+
+  function ___assert_fail(condition, filename, line, func) {
+      ABORT = true;
+      throw 'Assertion failed: ' + Pointer_stringify(condition) + ', at: ' + [filename ? Pointer_stringify(filename) : 'unknown filename', line, func ? Pointer_stringify(func) : 'unknown function'] + ' at ' + stackTrace();
+    }
+
+   
+
+  function _glGetProgramiv(program, pname, p) {
+      if (!p) {
+        // GLES2 specification does not specify how to behave if p is a null pointer. Since calling this function does not make sense
+        // if p == null, issue a GL error to notify user about it. 
+        GL.recordError(0x0501 /* GL_INVALID_VALUE */);
+        return;
+      }
+  
+      if (program >= GL.counter) {
+        GL.recordError(0x0501 /* GL_INVALID_VALUE */);
+        return;
+      }
+  
+      var ptable = GL.programInfos[program];
+      if (!ptable) {
+        GL.recordError(0x0502 /* GL_INVALID_OPERATION */);
+        return;
+      }
+  
+      if (pname == 0x8B84) { // GL_INFO_LOG_LENGTH
+        var log = GLctx.getProgramInfoLog(GL.programs[program]);
+        if (log === null) log = '(unknown error)';
+        HEAP32[((p)>>2)]=log.length + 1;
+      } else if (pname == 0x8B87 /* GL_ACTIVE_UNIFORM_MAX_LENGTH */) {
+        HEAP32[((p)>>2)]=ptable.maxUniformLength;
+      } else if (pname == 0x8B8A /* GL_ACTIVE_ATTRIBUTE_MAX_LENGTH */) {
+        if (ptable.maxAttributeLength == -1) {
+          var program = GL.programs[program];
+          var numAttribs = GLctx.getProgramParameter(program, GLctx.ACTIVE_ATTRIBUTES);
+          ptable.maxAttributeLength = 0; // Spec says if there are no active attribs, 0 must be returned.
+          for (var i = 0; i < numAttribs; ++i) {
+            var activeAttrib = GLctx.getActiveAttrib(program, i);
+            ptable.maxAttributeLength = Math.max(ptable.maxAttributeLength, activeAttrib.name.length+1);
+          }
+        }
+        HEAP32[((p)>>2)]=ptable.maxAttributeLength;
+      } else if (pname == 0x8A35 /* GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH */) {
+        if (ptable.maxUniformBlockNameLength == -1) {
+          var program = GL.programs[program];
+          var numBlocks = GLctx.getProgramParameter(program, GLctx.ACTIVE_UNIFORM_BLOCKS);
+          ptable.maxUniformBlockNameLength = 0;
+          for (var i = 0; i < numBlocks; ++i) {
+            var activeBlockName = GLctx.getActiveUniformBlockName(program, i);
+            ptable.maxUniformBlockNameLength = Math.max(ptable.maxUniformBlockNameLength, activeBlockName.length+1);
+          }
+        }
+        HEAP32[((p)>>2)]=ptable.maxUniformBlockNameLength;
+      } else {
+        HEAP32[((p)>>2)]=GLctx.getProgramParameter(GL.programs[program], pname);
+      }
+    }
+
+  function _glVertexAttribPointer(index, size, type, normalized, stride, ptr) {
+      GLctx.vertexAttribPointer(index, size, type, !!normalized, stride, ptr);
+    }
+
+  function _glGetShaderInfoLog(shader, maxLength, length, infoLog) {
+      var log = GLctx.getShaderInfoLog(GL.shaders[shader]);
+      if (log === null) log = '(unknown error)';
+      if (maxLength > 0 && infoLog) {
+        var numBytesWrittenExclNull = stringToUTF8(log, infoLog, maxLength);
+        if (length) HEAP32[((length)>>2)]=numBytesWrittenExclNull;
+      } else {
+        if (length) HEAP32[((length)>>2)]=0;
+      }
+    }
+
+  function _glfwMakeContextCurrent(winid) {}
+
   function _abort() {
       Module['abort']();
     }
 
 
-  function _glfwMakeContextCurrent(winid) {}
+  function _glGetUniformLocation(program, name) {
+      name = Pointer_stringify(name);
+  
+      var arrayOffset = 0;
+      // If user passed an array accessor "[index]", parse the array index off the accessor.
+      if (name.indexOf(']', name.length-1) !== -1) {
+        var ls = name.lastIndexOf('[');
+        var arrayIndex = name.slice(ls+1, -1);
+        if (arrayIndex.length > 0) {
+          arrayOffset = parseInt(arrayIndex);
+          if (arrayOffset < 0) {
+            return -1;
+          }
+        }
+        name = name.slice(0, ls);
+      }
+  
+      var ptable = GL.programInfos[program];
+      if (!ptable) {
+        return -1;
+      }
+      var utable = ptable.uniforms;
+      var uniformInfo = utable[name]; // returns pair [ dimension_of_uniform_array, uniform_location ]
+      if (uniformInfo && arrayOffset < uniformInfo[0]) { // Check if user asked for an out-of-bounds element, i.e. for 'vec4 colors[3];' user could ask for 'colors[10]' which should return -1.
+        return uniformInfo[1]+arrayOffset;
+      } else {
+        return -1;
+      }
+    }
 
   function ___lock() {}
 
@@ -7839,6 +7869,37 @@ function copyTempDouble(ptr) {
       Module["canvas"].width = Module["canvas"].height = 1;
       GLFW.windows = null;
       GLFW.active = null;
+    }
+
+  function _glUniformMatrix4fv(location, count, transpose, value) {
+  
+  
+      var view;
+      if (16*count <= GL.MINI_TEMP_BUFFER_SIZE) {
+        // avoid allocation when uploading few enough uniforms
+        view = GL.miniTempBufferViews[16*count-1];
+        for (var i = 0; i < 16*count; i += 16) {
+          view[i] = HEAPF32[(((value)+(4*i))>>2)];
+          view[i+1] = HEAPF32[(((value)+(4*i+4))>>2)];
+          view[i+2] = HEAPF32[(((value)+(4*i+8))>>2)];
+          view[i+3] = HEAPF32[(((value)+(4*i+12))>>2)];
+          view[i+4] = HEAPF32[(((value)+(4*i+16))>>2)];
+          view[i+5] = HEAPF32[(((value)+(4*i+20))>>2)];
+          view[i+6] = HEAPF32[(((value)+(4*i+24))>>2)];
+          view[i+7] = HEAPF32[(((value)+(4*i+28))>>2)];
+          view[i+8] = HEAPF32[(((value)+(4*i+32))>>2)];
+          view[i+9] = HEAPF32[(((value)+(4*i+36))>>2)];
+          view[i+10] = HEAPF32[(((value)+(4*i+40))>>2)];
+          view[i+11] = HEAPF32[(((value)+(4*i+44))>>2)];
+          view[i+12] = HEAPF32[(((value)+(4*i+48))>>2)];
+          view[i+13] = HEAPF32[(((value)+(4*i+52))>>2)];
+          view[i+14] = HEAPF32[(((value)+(4*i+56))>>2)];
+          view[i+15] = HEAPF32[(((value)+(4*i+60))>>2)];
+        }
+      } else {
+        view = HEAPF32.subarray((value)>>2,(value+count*64)>>2);
+      }
+      GLctx.uniformMatrix4fv(GL.uniforms[location], !!transpose, view);
     }
 
   function ___syscall6(which, varargs) {SYSCALLS.varargs = varargs;
@@ -8332,7 +8393,7 @@ function invoke_viiii(index,a1,a2,a3,a4) {
 
 Module.asmGlobalArg = { "Math": Math, "Int8Array": Int8Array, "Int16Array": Int16Array, "Int32Array": Int32Array, "Uint8Array": Uint8Array, "Uint16Array": Uint16Array, "Uint32Array": Uint32Array, "Float32Array": Float32Array, "Float64Array": Float64Array, "NaN": NaN, "Infinity": Infinity };
 
-Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_vi": nullFunc_vi, "nullFunc_vii": nullFunc_vii, "nullFunc_iiiiiiiiiii": nullFunc_iiiiiiiiiii, "nullFunc_ii": nullFunc_ii, "nullFunc_viijii": nullFunc_viijii, "nullFunc_iiiiiiiiiiii": nullFunc_iiiiiiiiiiii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_viiiiiiiiiiiiiii": nullFunc_viiiiiiiiiiiiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_fiii": nullFunc_fiii, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiiiiiiii": nullFunc_iiiiiiiiiiiii, "nullFunc_viiiiiii": nullFunc_viiiiiii, "nullFunc_viiiiiiiiii": nullFunc_viiiiiiiiii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_diii": nullFunc_diii, "nullFunc_i": nullFunc_i, "nullFunc_jiiii": nullFunc_jiiii, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_viii": nullFunc_viii, "nullFunc_v": nullFunc_v, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_viiii": nullFunc_viiii, "invoke_iiiiiiii": invoke_iiiiiiii, "invoke_iiiiiid": invoke_iiiiiid, "invoke_viiiii": invoke_viiiii, "invoke_vi": invoke_vi, "invoke_vii": invoke_vii, "invoke_iiiiiiiiiii": invoke_iiiiiiiiiii, "invoke_ii": invoke_ii, "invoke_viijii": invoke_viijii, "invoke_iiiiiiiiiiii": invoke_iiiiiiiiiiii, "invoke_iiii": invoke_iiii, "invoke_viiiiiiiiiiiiiii": invoke_viiiiiiiiiiiiiii, "invoke_viiiiii": invoke_viiiiii, "invoke_fiii": invoke_fiii, "invoke_iiiiiii": invoke_iiiiiii, "invoke_iiiiiiiiiiiii": invoke_iiiiiiiiiiiii, "invoke_viiiiiii": invoke_viiiiiii, "invoke_viiiiiiiiii": invoke_viiiiiiiiii, "invoke_iii": invoke_iii, "invoke_iiiiii": invoke_iiiiii, "invoke_diii": invoke_diii, "invoke_i": invoke_i, "invoke_jiiii": invoke_jiiii, "invoke_iiiii": invoke_iiiii, "invoke_iiiiij": invoke_iiiiij, "invoke_viii": invoke_viii, "invoke_v": invoke_v, "invoke_iiiiiiiii": invoke_iiiiiiiii, "invoke_iiiiid": invoke_iiiiid, "invoke_viiii": invoke_viiii, "_glUseProgram": _glUseProgram, "_strftime": _strftime, "_pthread_cond_wait": _pthread_cond_wait, "_glDeleteShader": _glDeleteShader, "_glVertexAttribPointer": _glVertexAttribPointer, "_glfwCreateWindow": _glfwCreateWindow, "_glGetProgramiv": _glGetProgramiv, "_pthread_key_create": _pthread_key_create, "_glfwPollEvents": _glfwPollEvents, "_glfwGetTime": _glfwGetTime, "_abort": _abort, "_glfwInit": _glfwInit, "_glDrawArrays": _glDrawArrays, "_glGetProgramInfoLog": _glGetProgramInfoLog, "___setErrNo": ___setErrNo, "___gxx_personality_v0": ___gxx_personality_v0, "___cxa_find_matching_catch_4": ___cxa_find_matching_catch_4, "___assert_fail": ___assert_fail, "___cxa_free_exception": ___cxa_free_exception, "___cxa_find_matching_catch_2": ___cxa_find_matching_catch_2, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___buildEnvironment": ___buildEnvironment, "_glfwMakeContextCurrent": _glfwMakeContextCurrent, "_glLinkProgram": _glLinkProgram, "_glGetShaderInfoLog": _glGetShaderInfoLog, "__addDays": __addDays, "_glfwGetFramebufferSize": _glfwGetFramebufferSize, "_glViewport": _glViewport, "_strftime_l": _strftime_l, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "_glClearColor": _glClearColor, "_glDisableVertexAttribArray": _glDisableVertexAttribArray, "_glClear": _glClear, "_emscripten_memcpy_big": _emscripten_memcpy_big, "___cxa_end_catch": ___cxa_end_catch, "___resumeException": ___resumeException, "___cxa_find_matching_catch_3": ___cxa_find_matching_catch_3, "__exit": __exit, "_glEnableVertexAttribArray": _glEnableVertexAttribArray, "___cxa_begin_catch": ___cxa_begin_catch, "_pthread_getspecific": _pthread_getspecific, "__ZSt18uncaught_exceptionv": __ZSt18uncaught_exceptionv, "_glBindAttribLocation": _glBindAttribLocation, "__arraySum": __arraySum, "_glCreateShader": _glCreateShader, "___syscall91": ___syscall91, "_glShaderSource": _glShaderSource, "_pthread_once": _pthread_once, "_getenv": _getenv, "___cxa_rethrow": ___cxa_rethrow, "___map_file": ___map_file, "___syscall54": ___syscall54, "___unlock": ___unlock, "_glBindBuffer": _glBindBuffer, "__isLeapYear": __isLeapYear, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_emscripten_get_now": _emscripten_get_now, "_glGenBuffers": _glGenBuffers, "_glAttachShader": _glAttachShader, "_glfwTerminate": _glfwTerminate, "_pthread_setspecific": _pthread_setspecific, "_glCreateProgram": _glCreateProgram, "_glCompileShader": _glCompileShader, "___cxa_throw": ___cxa_throw, "_glDeleteProgram": _glDeleteProgram, "___lock": ___lock, "___syscall6": ___syscall6, "___cxa_allocate_exception": ___cxa_allocate_exception, "___cxa_atexit": ___cxa_atexit, "_glBufferData": _glBufferData, "_glGetShaderiv": _glGetShaderiv, "_atexit": _atexit, "___syscall140": ___syscall140, "_exit": _exit, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "___dso_handle": ___dso_handle };
+Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "abortStackOverflow": abortStackOverflow, "nullFunc_iiiiiiii": nullFunc_iiiiiiii, "nullFunc_iiiiiid": nullFunc_iiiiiid, "nullFunc_viiiii": nullFunc_viiiii, "nullFunc_vi": nullFunc_vi, "nullFunc_vii": nullFunc_vii, "nullFunc_iiiiiiiiiii": nullFunc_iiiiiiiiiii, "nullFunc_ii": nullFunc_ii, "nullFunc_viijii": nullFunc_viijii, "nullFunc_iiiiiiiiiiii": nullFunc_iiiiiiiiiiii, "nullFunc_iiii": nullFunc_iiii, "nullFunc_viiiiiiiiiiiiiii": nullFunc_viiiiiiiiiiiiiii, "nullFunc_viiiiii": nullFunc_viiiiii, "nullFunc_fiii": nullFunc_fiii, "nullFunc_iiiiiii": nullFunc_iiiiiii, "nullFunc_iiiiiiiiiiiii": nullFunc_iiiiiiiiiiiii, "nullFunc_viiiiiii": nullFunc_viiiiiii, "nullFunc_viiiiiiiiii": nullFunc_viiiiiiiiii, "nullFunc_iii": nullFunc_iii, "nullFunc_iiiiii": nullFunc_iiiiii, "nullFunc_diii": nullFunc_diii, "nullFunc_i": nullFunc_i, "nullFunc_jiiii": nullFunc_jiiii, "nullFunc_iiiii": nullFunc_iiiii, "nullFunc_iiiiij": nullFunc_iiiiij, "nullFunc_viii": nullFunc_viii, "nullFunc_v": nullFunc_v, "nullFunc_iiiiiiiii": nullFunc_iiiiiiiii, "nullFunc_iiiiid": nullFunc_iiiiid, "nullFunc_viiii": nullFunc_viiii, "invoke_iiiiiiii": invoke_iiiiiiii, "invoke_iiiiiid": invoke_iiiiiid, "invoke_viiiii": invoke_viiiii, "invoke_vi": invoke_vi, "invoke_vii": invoke_vii, "invoke_iiiiiiiiiii": invoke_iiiiiiiiiii, "invoke_ii": invoke_ii, "invoke_viijii": invoke_viijii, "invoke_iiiiiiiiiiii": invoke_iiiiiiiiiiii, "invoke_iiii": invoke_iiii, "invoke_viiiiiiiiiiiiiii": invoke_viiiiiiiiiiiiiii, "invoke_viiiiii": invoke_viiiiii, "invoke_fiii": invoke_fiii, "invoke_iiiiiii": invoke_iiiiiii, "invoke_iiiiiiiiiiiii": invoke_iiiiiiiiiiiii, "invoke_viiiiiii": invoke_viiiiiii, "invoke_viiiiiiiiii": invoke_viiiiiiiiii, "invoke_iii": invoke_iii, "invoke_iiiiii": invoke_iiiiii, "invoke_diii": invoke_diii, "invoke_i": invoke_i, "invoke_jiiii": invoke_jiiii, "invoke_iiiii": invoke_iiiii, "invoke_iiiiij": invoke_iiiiij, "invoke_viii": invoke_viii, "invoke_v": invoke_v, "invoke_iiiiiiiii": invoke_iiiiiiiii, "invoke_iiiiid": invoke_iiiiid, "invoke_viiii": invoke_viiii, "_glUseProgram": _glUseProgram, "_strftime": _strftime, "_pthread_cond_wait": _pthread_cond_wait, "_glDeleteShader": _glDeleteShader, "_glVertexAttribPointer": _glVertexAttribPointer, "_glfwCreateWindow": _glfwCreateWindow, "_glGetProgramiv": _glGetProgramiv, "___syscall54": ___syscall54, "_glfwPollEvents": _glfwPollEvents, "_glfwGetTime": _glfwGetTime, "_abort": _abort, "_glUniformMatrix4fv": _glUniformMatrix4fv, "___unlock": ___unlock, "_glBindAttribLocation": _glBindAttribLocation, "_glGetProgramInfoLog": _glGetProgramInfoLog, "___setErrNo": ___setErrNo, "___gxx_personality_v0": ___gxx_personality_v0, "___cxa_find_matching_catch_4": ___cxa_find_matching_catch_4, "_glClearColor": _glClearColor, "___assert_fail": ___assert_fail, "_glDeleteProgram": _glDeleteProgram, "___cxa_allocate_exception": ___cxa_allocate_exception, "__ZSt18uncaught_exceptionv": __ZSt18uncaught_exceptionv, "___buildEnvironment": ___buildEnvironment, "_glfwMakeContextCurrent": _glfwMakeContextCurrent, "_glBindBuffer": _glBindBuffer, "_glGetShaderInfoLog": _glGetShaderInfoLog, "__addDays": __addDays, "_glfwGetFramebufferSize": _glfwGetFramebufferSize, "_glViewport": _glViewport, "_strftime_l": _strftime_l, "_emscripten_set_main_loop_timing": _emscripten_set_main_loop_timing, "___cxa_free_exception": ___cxa_free_exception, "_glGetUniformLocation": _glGetUniformLocation, "_glDisableVertexAttribArray": _glDisableVertexAttribArray, "___cxa_begin_catch": ___cxa_begin_catch, "_emscripten_memcpy_big": _emscripten_memcpy_big, "___cxa_end_catch": ___cxa_end_catch, "___resumeException": ___resumeException, "___cxa_find_matching_catch_3": ___cxa_find_matching_catch_3, "__exit": __exit, "___cxa_find_matching_catch_2": ___cxa_find_matching_catch_2, "_glClear": _glClear, "_pthread_getspecific": _pthread_getspecific, "___lock": ___lock, "_glDrawArrays": _glDrawArrays, "__arraySum": __arraySum, "_glCreateShader": _glCreateShader, "___syscall91": ___syscall91, "_glAttachShader": _glAttachShader, "_pthread_once": _pthread_once, "_getenv": _getenv, "___map_file": ___map_file, "_pthread_key_create": _pthread_key_create, "_glfwInit": _glfwInit, "_glLinkProgram": _glLinkProgram, "__isLeapYear": __isLeapYear, "_emscripten_set_main_loop": _emscripten_set_main_loop, "_emscripten_get_now": _emscripten_get_now, "_glGenBuffers": _glGenBuffers, "_glShaderSource": _glShaderSource, "_glfwTerminate": _glfwTerminate, "_pthread_setspecific": _pthread_setspecific, "_glCreateProgram": _glCreateProgram, "_glCompileShader": _glCompileShader, "___cxa_throw": ___cxa_throw, "_glEnableVertexAttribArray": _glEnableVertexAttribArray, "___cxa_rethrow": ___cxa_rethrow, "___syscall6": ___syscall6, "___cxa_atexit": ___cxa_atexit, "_glBufferData": _glBufferData, "_glGetShaderiv": _glGetShaderiv, "_atexit": _atexit, "___syscall140": ___syscall140, "_exit": _exit, "___cxa_find_matching_catch": ___cxa_find_matching_catch, "___syscall145": ___syscall145, "___syscall146": ___syscall146, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX, "___dso_handle": ___dso_handle };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 (Module.asmGlobalArg, Module.asmLibraryArg, buffer);
