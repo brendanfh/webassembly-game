@@ -14,18 +14,18 @@
 using namespace std;
 
 namespace Gfx {
-    extern GLuint program;
-    extern GLuint vbo;
-    extern GLuint ibo;
-
-    extern GLuint vertShader;
-    extern GLuint fragShader;
-
     extern GLFWwindow* window;
+
+    extern float width; //Width according to the game
+    extern float height;
+    extern float canvasWidth; //Width of the canvas element
+    extern float canvasHeight;
 
     void Initialize();
     GLuint CompileShader(GLenum shaderType, const char *shaderSrc);
     GLuint CreateProgram(GLuint vertShader, GLuint fragShader);
+
+    void SetSize(float width, float height);
 
     void BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data);
     void SetupDraw();

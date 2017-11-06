@@ -2,11 +2,32 @@
 
 //Have to declare these somewhere...
 GLFWwindow* Gfx::window = NULL;
-GLuint Gfx::program = -1;
-GLuint Gfx::fragShader = -1;
-GLuint Gfx::vertShader = -1;
-GLuint Gfx::vbo = -1;
-GLuint Gfx::ibo = -1;
+float Gfx::width = 0.0f;
+float Gfx::height = 0.0f;
+float Gfx::canvasWidth = 0.0f;
+float Gfx::canvasHeight = 0.0f;
+
+//These are privated because they are not declared in the header
+GLuint program = -1;
+GLuint fragShader = -1;
+GLuint vertShader = -1;
+GLuint vbo = -1;
+GLuint ibo = -1;
+
+void SetupResize() {
+    auto resizeFunc = [](GLFWwindow* window, int width, int height) {
+        Gfx::canvasWidth = (float)width;
+        Gfx::canvasHeight = (float)height;
+
+        glViewport(0, 0, width, height);
+    };
+
+    glfwSetFramebufferSizeCallback(Gfx::window, resizeFunc);
+
+    int currWidth, currHeight;
+    glfwGetFramebufferSize(Gfx::window, &currWidth, &currHeight);
+    resizeFunc(Gfx::window, currWidth, currHeight);
+}
 
 void Gfx::Initialize() {
     if (!glfwInit())
@@ -19,8 +40,9 @@ void Gfx::Initialize() {
     }
     glfwMakeContextCurrent(Gfx::window);
 
-    glGenBuffers(1, &Gfx::vbo);
-    glGenBuffers(1, &Gfx::ibo);
+
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ibo);
 
     char vertShaderSrc[] =
         "attribute vec2 aPosition; \n"
@@ -41,10 +63,10 @@ void Gfx::Initialize() {
         "	gl_FragColor = vColor;\n"
         "}";
 
-    Gfx::vertShader = Gfx::CompileShader(GL_VERTEX_SHADER, vertShaderSrc);
-    Gfx::fragShader = Gfx::CompileShader(GL_FRAGMENT_SHADER, fragShaderSrc);
+    vertShader = Gfx::CompileShader(GL_VERTEX_SHADER, vertShaderSrc);
+    fragShader = Gfx::CompileShader(GL_FRAGMENT_SHADER, fragShaderSrc);
     
-    Gfx::program = Gfx::CreateProgram(Gfx::vertShader, Gfx::fragShader);
+    program = Gfx::CreateProgram(vertShader, fragShader);
 
     glBindAttribLocation(program, 0, "aPosition");
     glBindAttribLocation(program, 1, "aColor");
@@ -54,7 +76,7 @@ void Gfx::Initialize() {
     for (int i = 0; i < 4 * 1024; i++)
         emptyData[i] = 0.0f;
 
-    glBindBuffer(GL_ARRAY_BUFFER, Gfx::vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * 6 * 1024, emptyData, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, NULL);
 
@@ -68,14 +90,12 @@ void Gfx::Initialize() {
         indexData[i * 6 + 5] = i * 4 + 3;
     }
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Gfx::ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * 1024, indexData, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
 
-    GLuint projUniform = glGetUniformLocation(program, "uProjection");
-
-    glm::mat4x4 proj = glm::ortho(0.0f, 10.0f, 10.0f, 0.0f, -0.1f, -1000.0f);
-    glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(proj));
+    Gfx::SetSize(1.0f, 1.0f);
+    SetupResize();
 }
 
 GLuint Gfx::CompileShader(GLenum shaderType, const char *shaderSrc) {
@@ -142,8 +162,18 @@ GLuint Gfx::CreateProgram(GLuint vertShader, GLuint fragShader) {
     return program;
 }
 
+void Gfx::SetSize(float width, float height) {
+    Gfx::width = width;
+    Gfx::height = height;
+
+    GLuint projUniform = glGetUniformLocation(program, "uProjection");
+
+    glm::mat4x4 proj = glm::ortho(0.0f, Gfx::width, Gfx::height, 0.0f, -0.1f, -1000.0f);
+    glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(proj));
+}
+
 void Gfx::BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data) {
-    glBindBuffer(GL_ARRAY_BUFFER, Gfx::vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
     glBindBuffer(GL_ARRAY_BUFFER, NULL);
 }
@@ -152,11 +182,11 @@ void Gfx::SetupDraw() {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     
-    glBindBuffer(GL_ARRAY_BUFFER, Gfx::vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6*4, (void*)(0));
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6*4, (void*)(4 * 2));
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Gfx::ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 }
 
 void Gfx::CleanupDraw() {

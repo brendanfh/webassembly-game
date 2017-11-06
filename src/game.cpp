@@ -7,6 +7,10 @@
 Game::Game() {
     Gfx::Initialize();
     Keys::Initialize();
+    Mouse::Initialize();
+
+    Gfx::SetSize(10.0f, 10.0f);
+
     lastTime = glfwGetTime();
 
     t = 0.0;
@@ -25,22 +29,27 @@ void Game::tick() {
     double dt = currTime - lastTime;
     lastTime = currTime;
 
-    if (Keys::IsDown(GLFW_KEY_LEFT)) {
-        t -= dt;
+    // if (Keys::IsDown(GLFW_KEY_LEFT)) {
+    //     t -= dt;
+    // }
+    // if (Keys::IsDown(GLFW_KEY_RIGHT)) {
+    //     t += dt;
+    // }
+    // if (t > TAU) t -= TAU;
+    float x = 0.0f, y = 0.0f;
+    if(Mouse::IsButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+        Mouse::GetScreenPos(x, y);
+        quad->SetRect(x, y, 1.0f, 1.0f);
     }
-    if (Keys::IsDown(GLFW_KEY_RIGHT)) {
-        t += dt;
-    }
-    if (t > TAU) t -= TAU;
-    quad->SetRect(cos(t) * 3.0f + 5.0f, sin(t) * 3.0f + 5.0f, 4.0f, 4.0f);
+
     quad->BufferData();
+
+    //Update the keyboard to clear the previous keys
+    Keys::Tick();
+    Mouse::Tick();
 }
 
 void Game::render() {
-    int width, height;
-    glfwGetFramebufferSize(Gfx::window, &width, &height);
-    glViewport(0, 0, width, height);
-
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
