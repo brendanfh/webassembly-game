@@ -14,7 +14,7 @@
 using namespace std;
 
 namespace Gfx {
-	extern GLuint program;
+    extern GLuint program;
     extern GLuint vbo;
     extern GLuint ibo;
 
