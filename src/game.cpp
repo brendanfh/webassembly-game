@@ -10,7 +10,8 @@ Game::Game() {
     Mouse::Initialize();
 
     Gfx::SetSize(10.0f, 10.0f);
-
+    Gfx::Texture* tex = Gfx::LoadTexture("res/test.png");
+    tex->Use();
 
     lastTime = glfwGetTime();
 

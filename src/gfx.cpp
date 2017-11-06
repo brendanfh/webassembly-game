@@ -66,7 +66,7 @@ void Gfx::Initialize() {
         "varying vec2 vTexCoord;   \n"
         "\n"
         "void main() {\n"
-        "	gl_FragColor = texture2D(uTexture, vTexCoord) * vColor;\n"
+        "	gl_FragColor = texture2D(uTexture, vTexCoord);\n"
         "}";
 
     vertShader = Gfx::CompileShader(GL_VERTEX_SHADER, vertShaderSrc);
@@ -104,12 +104,7 @@ void Gfx::Initialize() {
     Gfx::SetSize(1.0f, 1.0f);
     SetupResize();
 
-    GLuint tex = Gfx::LoadTexture("res/test.png");
-    // glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, tex);
-
-    GLuint texUniform = glGetUniformLocation(program, "uTexture");
-    glUniform1i(texUniform, 0);
+    Gfx::UseTextureUnit(0);
 }
 
 GLuint Gfx::CompileShader(GLenum shaderType, const char *shaderSrc) {
@@ -213,16 +208,17 @@ void Gfx::CleanupDraw() {
     glDisableVertexAttribArray(2);
 }
 
-GLuint Gfx::LoadTexture(const char * path) {
+
+Gfx::Texture* Gfx::LoadTexture(const char * path) {
     SDL_Surface* image;
     if (!(image = IMG_Load(path))) {
         cout << "Failed to load image: " << path << endl;
-        return -1; //do better than this
+        return new Gfx::Texture(-1, NULL); //do better than this
     }
 
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
 
     cout << image->w << " x " << image->h << endl;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
@@ -230,8 +226,13 @@ GLuint Gfx::LoadTexture(const char * path) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, NULL);
 
-    SDL_FreeSurface(image);
+    Gfx::Texture* texture = new Gfx::Texture(textureID, image);
     return texture;
+}
+
+void Gfx::UseTextureUnit(int tunit) {
+    GLuint texUniform = glGetUniformLocation(program, "uTexture");
+    glUniform1i(texUniform, tunit);
 }
 
 //Quad Class Functions
@@ -285,4 +286,19 @@ void Gfx::Quad::SetColor(float r, float g, float b, float a) {
 
 void Gfx::Quad::BufferData() {
     Gfx::BufferData(id * 32 * sizeof(GLfloat), 32 * sizeof(GLfloat), renderData);
+}
+
+Gfx::Texture::Texture(GLuint id, SDL_Surface* image) {
+    this->id = id;
+    this->image = image;
+}
+
+Gfx::Texture::~Texture() {
+    if (this->image != NULL)
+        SDL_FreeSurface(this->image);
+}
+
+void Gfx::Texture::Use(int tunit) {
+    glActiveTexture(GL_TEXTURE0 + tunit);
+    glBindTexture(GL_TEXTURE_2D, this->id);
 }

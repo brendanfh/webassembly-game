@@ -16,6 +16,30 @@
 using namespace std;
 
 namespace Gfx {
+    class Quad {
+    private:
+        int id;
+        GLfloat* renderData;
+
+    public:
+        Quad(int id);
+        ~Quad();
+        void SetRect(float x, float y, float w, float h);
+        void SetColor(float r, float g, float b, float a);
+        void BufferData();
+    };
+
+    class Texture {
+    private:
+        GLuint id;
+        SDL_Surface* image;
+
+    public:
+        Texture(GLuint id, SDL_Surface* image);
+        ~Texture();
+        void Use(int tuint = 0);
+    };
+
     extern GLFWwindow* window;
 
     extern float width; //Width according to the game
@@ -33,20 +57,8 @@ namespace Gfx {
     void SetupDraw();
     void CleanupDraw();
 
-    GLuint LoadTexture(const char * path);
-
-    class Quad {
-    private:
-        int id;
-        GLfloat* renderData;
-
-    public:
-        Quad(int id);
-        ~Quad();
-        void SetRect(float x, float y, float w, float h);
-        void SetColor(float r, float g, float b, float a);
-        void BufferData();
-    };
+    Gfx::Texture* LoadTexture(const char * path);
+    void UseTextureUnit(int unit);
 };
 
 #endif
