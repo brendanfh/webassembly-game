@@ -6,6 +6,7 @@
 
 Game::Game() {
     Gfx::Initialize();
+    Keys::Initialize();
     lastTime = glfwGetTime();
 
     t = 0.0;
@@ -24,7 +25,12 @@ void Game::tick() {
     double dt = currTime - lastTime;
     lastTime = currTime;
 
-    t += dt;
+    if (Keys::IsDown(GLFW_KEY_LEFT)) {
+        t -= dt;
+    }
+    if (Keys::IsDown(GLFW_KEY_RIGHT)) {
+        t += dt;
+    }
     if (t > TAU) t -= TAU;
     quad->SetRect(cos(t) * 3.0f + 5.0f, sin(t) * 3.0f + 5.0f, 4.0f, 4.0f);
     quad->BufferData();

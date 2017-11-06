@@ -34,7 +34,7 @@ namespace Gfx {
     class Quad {
     private:
         int id;
-        GLfloat* data;
+        GLfloat* renderData;
 
     public:
         Quad(int id);

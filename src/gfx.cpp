@@ -169,43 +169,43 @@ void Gfx::CleanupDraw() {
 //Quad Class Functions
 Gfx::Quad::Quad(int id) {
     this->id = id;
-    this->data = new GLfloat[4 * 6];
+    this->renderData = new GLfloat[4 * 6];
 }
 
 Gfx::Quad::~Quad() {
-    delete[] this->data;
+    delete[] this->renderData;
 }
 
 void Gfx::Quad::SetRect(float x, float y, float w, float h) {
-    data[6 * 0 + 0] = x;
-    data[6 * 0 + 1] = y;
-    data[6 * 1 + 0] = x + w;
-    data[6 * 1 + 1] = y;
-    data[6 * 2 + 0] = x + w;
-    data[6 * 2 + 1] = y + h;
-    data[6 * 3 + 0] = x;
-    data[6 * 3 + 1] = y + h;
+    renderData[6 * 0 + 0] = x;
+    renderData[6 * 0 + 1] = y;
+    renderData[6 * 1 + 0] = x + w;
+    renderData[6 * 1 + 1] = y;
+    renderData[6 * 2 + 0] = x + w;
+    renderData[6 * 2 + 1] = y + h;
+    renderData[6 * 3 + 0] = x;
+    renderData[6 * 3 + 1] = y + h;
 }
 
 void Gfx::Quad::SetColor(float r, float g, float b, float a) {
-    data[6 * 0 + 2] = r;
-    data[6 * 0 + 3] = g;
-    data[6 * 0 + 4] = b;
-    data[6 * 0 + 5] = a;
-    data[6 * 1 + 2] = r;
-    data[6 * 1 + 3] = g;
-    data[6 * 1 + 4] = b;
-    data[6 * 1 + 5] = a;
-    data[6 * 2 + 2] = r;
-    data[6 * 2 + 3] = g;
-    data[6 * 2 + 4] = b;
-    data[6 * 2 + 5] = a;
-    data[6 * 3 + 2] = r;
-    data[6 * 3 + 3] = g;
-    data[6 * 3 + 4] = b;
-    data[6 * 3 + 5] = a;
+    renderData[6 * 0 + 2] = r;
+    renderData[6 * 0 + 3] = g;
+    renderData[6 * 0 + 4] = b;
+    renderData[6 * 0 + 5] = a;
+    renderData[6 * 1 + 2] = r;
+    renderData[6 * 1 + 3] = g;
+    renderData[6 * 1 + 4] = b;
+    renderData[6 * 1 + 5] = a;
+    renderData[6 * 2 + 2] = r;
+    renderData[6 * 2 + 3] = g;
+    renderData[6 * 2 + 4] = b;
+    renderData[6 * 2 + 5] = a;
+    renderData[6 * 3 + 2] = r;
+    renderData[6 * 3 + 3] = g;
+    renderData[6 * 3 + 4] = b;
+    renderData[6 * 3 + 5] = a;
 }
 
 void Gfx::Quad::BufferData() {
-    Gfx::BufferData(id * 24 * sizeof(GLfloat), 24 * sizeof(GLfloat), data);
+    Gfx::BufferData(id * 24 * sizeof(GLfloat), 24 * sizeof(GLfloat), renderData);
 }

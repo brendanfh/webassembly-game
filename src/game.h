@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "gfx.h"
+#include "input.h"
 
 using namespace std;
 
