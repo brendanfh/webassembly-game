@@ -6,11 +6,13 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "gfx.h"
+
 using namespace std;
 
 class Game {
 private:
-    GLfloat* quadData;
+    Gfx::Quad* quad;
     double lastTime;
 
     double t;

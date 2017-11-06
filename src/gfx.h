@@ -16,6 +16,7 @@ using namespace std;
 namespace Gfx {
 	extern GLuint program;
     extern GLuint vbo;
+    extern GLuint ibo;
 
     extern GLuint vertShader;
     extern GLuint fragShader;
@@ -26,9 +27,22 @@ namespace Gfx {
     GLuint CompileShader(GLenum shaderType, const char *shaderSrc);
     GLuint CreateProgram(GLuint vertShader, GLuint fragShader);
 
-    void BufferData(GLsizeiptr size, const GLfloat* data);
+    void BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data);
     void SetupDraw();
     void CleanupDraw();
+
+    class Quad {
+    private:
+        int id;
+        GLfloat* data;
+
+    public:
+        Quad(int id);
+        ~Quad();
+        void SetRect(float x, float y, float w, float h);
+        void SetColor(float r, float g, float b, float a);
+        void BufferData();
+    };
 };
 
 #endif
