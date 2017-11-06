@@ -14,6 +14,10 @@ Graphics Engine:
   ✔ Widths and Heights are resizable @done(17-11-06 13:33)
   ✔ Canvas widths and heights don't affect mouse positions @done(17-11-06 13:33)
 
+  ☐ Use textures in the engine @started(17-11-06 14:04)
+    ☐ Load textures using SDL
+    ☐ Create a system to draw using OpenGL
+
 Implement an Input System:
   ✔ Mouse @started(17-11-06 12:58) @done(17-11-06 13:32) @lasted(34 minutes 22 seconds)
     ✔ Get position @done(17-11-06 13:08)

@@ -4,6 +4,8 @@
 #define GLFW_INCLUDE_ES3
 
 #include <GLFW/glfw3.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,6 +32,8 @@ namespace Gfx {
     void BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data);
     void SetupDraw();
     void CleanupDraw();
+
+    GLuint LoadTexture(const char * path);
 
     class Quad {
     private:

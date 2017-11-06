@@ -11,6 +11,7 @@ Game::Game() {
 
     Gfx::SetSize(10.0f, 10.0f);
 
+
     lastTime = glfwGetTime();
 
     t = 0.0;
