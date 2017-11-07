@@ -30,19 +30,25 @@ Game::Game() {
     Gfx::SetSize(16.0f, 12.0f);
 
     timer = new GameTimer();
-    player = new Player(0);
+    world = new World();
+
+    gameTexture = Gfx::LoadTexture("res/test.png");
+    gameTexture->Use(0);
+
+    Player* ply = new Player(0);
+    world->AddEntity(ply);
 }
 
 Game::~Game() {
     cout << "Destuctor was called" << endl;
     delete timer;
-    delete player;
+    delete world;
 }
 
 void Game::tick() {
     float dt = (float) timer->GetDt();
 
-    player->Tick(dt);
+    world->Tick(dt);
 
     Keys::Tick();
     Mouse::Tick();
@@ -52,7 +58,7 @@ void Game::render() {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    player->Render();
+    world->Render();
 
     Gfx::SetupDraw();
     glDrawElements(GL_TRIANGLES, 1024, GL_UNSIGNED_INT, (void*) 0);

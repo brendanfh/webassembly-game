@@ -18,10 +18,11 @@ using namespace std;
 namespace Gfx {
     class Quad {
     private:
-        int id;
         GLfloat* renderData;
 
     public:
+        int id;
+
         Quad(int id);
         ~Quad();
         void SetRect(float x, float y, float w, float h);

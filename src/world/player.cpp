@@ -7,19 +7,24 @@ Player::Player(int id) : Entity(id) {
     y = 0.0f;
 
     quad->SetRect(x, y, 2.0f, 2.0f);
-
-    tex = Gfx::LoadTexture("res/test.png");
-    tex->Use(0);
+    quad->SetSubTexture(0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 Player::~Player() {
     Entity::~Entity();
+}
 
-    delete tex;
+void Player::Fire() {
+    Bullet* bullet = new Bullet(-1, x, y, 5, 0, this);
+    this->world->AddEntity(bullet);
 }
 
 void Player::Tick(float dt) {
     Entity::Tick(dt);
+
+    if (Keys::IsJustDown(GLFW_KEY_SPACE)) {
+        this->Fire();
+    }
 
     if (Keys::IsDown(GLFW_KEY_W)) {
         y -= 4.0f * dt;

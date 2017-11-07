@@ -3,7 +3,8 @@
 
 #include "../input.h"
 #include "../gfx.h"
-#include "entity.h"
+#include "world.h"
+#include "bullet.h"
 
 #include <iostream>
 
@@ -13,11 +14,12 @@ class Player : public Entity {
 private:
     float x;
     float y;
-    Gfx::Texture* tex;
 
 public:
     Player(int id);
     ~Player();
+
+    void Fire();
     void Tick(float dt) override;
     void Render() override;
 };

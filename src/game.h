@@ -9,6 +9,7 @@
 #include "gfx.h"
 #include "input.h"
 #include "world/player.h"
+#include "world/world.h"
 
 using namespace std;
 
@@ -26,7 +27,8 @@ public:
 class Game {
 private:
     GameTimer* timer;
-    Player* player;
+    World* world;
+    Gfx::Texture* gameTexture;
 
 public:
     Game();
