@@ -4,49 +4,42 @@
 #include <cmath>
 #include <string>
 
+GameTimer::GameTimer() {
+    this->lt = glfwGetTime();
+    this->dt = 0.0;
+}
+
+GameTimer::~GameTimer() {
+    this->lt = 0.0;
+    this->dt = 0.0;
+}
+
+double GameTimer::GetDt() {
+    double curr = glfwGetTime();
+    this->dt = curr - this->lt;
+    this->lt = curr;
+
+    return this->dt;
+}
+
 Game::Game() {
     Gfx::Initialize();
     Keys::Initialize();
     Mouse::Initialize();
 
-    Gfx::SetSize(10.0f, 10.0f);
-    Gfx::Texture* tex = Gfx::LoadTexture("res/test.png");
-    tex->Use();
+    Gfx::SetSize(16.0f, 12.0f);
 
-    lastTime = glfwGetTime();
-
-    t = 0.0;
-    quad = new Gfx::Quad(0);
-    quad->SetColor(1.0f, 0.0f, 1.0f, 1.0f);
+    timer = new GameTimer();
 }
 
 Game::~Game() {
     cout << "Destuctor was called" << endl;
-    delete quad;
 }
 
 #define TAU (3.1415926595 * 2)
 void Game::tick() {
-    double currTime = glfwGetTime();
-    double dt = currTime - lastTime;
-    lastTime = currTime;
+    double dt = timer->GetDt();
 
-    // if (Keys::IsDown(GLFW_KEY_LEFT)) {
-    //     t -= dt;
-    // }
-    // if (Keys::IsDown(GLFW_KEY_RIGHT)) {
-    //     t += dt;
-    // }
-    // if (t > TAU) t -= TAU;
-    float x = 0.0f, y = 0.0f;
-    if(Mouse::IsButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-        Mouse::GetScreenPos(x, y);
-        quad->SetRect(x, y, 1.0f, 1.0f);
-    }
-
-    quad->BufferData();
-
-    //Update the keyboard to clear the previous keys
     Keys::Tick();
     Mouse::Tick();
 }

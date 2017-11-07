@@ -26,6 +26,7 @@ namespace Gfx {
         ~Quad();
         void SetRect(float x, float y, float w, float h);
         void SetColor(float r, float g, float b, float a);
+        void SetSubTexture(float x, float y, float w, float h, float sw, float sh);
         void BufferData();
     };
 
@@ -33,6 +34,9 @@ namespace Gfx {
     private:
         GLuint id;
         SDL_Surface* image;
+
+        float width;
+        float height;
 
     public:
         Texture(GLuint id, SDL_Surface* image);

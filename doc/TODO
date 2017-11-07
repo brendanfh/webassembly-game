@@ -17,6 +17,7 @@ Graphics Engine:
   ✔ Use textures in the engine @started(17-11-06 14:04) @done(17-11-06 16:09) @lasted(2 hours 5 minutes 42 seconds)
     ✔ Load textures using SDL @done(17-11-06 15:12)
     ✔ Create a system to draw using OpenGL @done(17-11-06 16:09)
+  ✔ Subtextures in quad class @started(17-11-06 17:55) @done(17-11-06 18:07) @lasted(12 minutes 2 seconds)
 
 Implement an Input System:
   ✔ Mouse @started(17-11-06 12:58) @done(17-11-06 13:32) @lasted(34 minutes 22 seconds)
@@ -26,5 +27,7 @@ Implement an Input System:
     ✔ Get keys that are down @done(17-11-06 11:47)
     ✔ Get keys that were just pressed @done(17-11-06 12:58)
 
+Improvements:
+  ✔ Implement a GameTimer class to clean up the Game class @started(17-11-06 18:17) @done(17-11-06 18:21) @lasted(4 minutes 44 seconds)
+
 The game:
-  ☐ The player

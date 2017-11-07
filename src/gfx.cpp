@@ -14,6 +14,9 @@ GLuint vertShader = -1;
 GLuint vbo = -1;
 GLuint ibo = -1;
 
+GLuint texUniform = -1;
+GLuint projUniform = -1;
+
 void SetupResize() {
     auto resizeFunc = [](GLFWwindow* window, int width, int height) {
         Gfx::canvasWidth = (float)width;
@@ -40,7 +43,6 @@ void Gfx::Initialize() {
     }
     glfwMakeContextCurrent(Gfx::window);
 
-
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ibo);
 
@@ -66,7 +68,7 @@ void Gfx::Initialize() {
         "varying vec2 vTexCoord;   \n"
         "\n"
         "void main() {\n"
-        "	gl_FragColor = texture2D(uTexture, vTexCoord);\n"
+        "	gl_FragColor = texture2D(uTexture, vTexCoord) * vColor;\n"
         "}";
 
     vertShader = Gfx::CompileShader(GL_VERTEX_SHADER, vertShaderSrc);
@@ -78,6 +80,9 @@ void Gfx::Initialize() {
     glBindAttribLocation(program, 1, "aTexCoord");
     glBindAttribLocation(program, 2, "aColor");
     glUseProgram(program);
+
+    projUniform = glGetUniformLocation(program, "uProjection");
+    texUniform = glGetUniformLocation(program, "uTexture");
 
     GLfloat* emptyData = new GLfloat[4 * 8 * 1024];
     for (int i = 0; i < 4 * 8 * 1024; i++)
@@ -175,8 +180,6 @@ void Gfx::SetSize(float width, float height) {
     Gfx::width = width;
     Gfx::height = height;
 
-    GLuint projUniform = glGetUniformLocation(program, "uProjection");
-
     glm::mat4x4 proj = glm::ortho(0.0f, Gfx::width, Gfx::height, 0.0f, -0.1f, -1000.0f);
     glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(proj));
 }
@@ -220,7 +223,6 @@ Gfx::Texture* Gfx::LoadTexture(const char * path) {
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
 
-    cout << image->w << " x " << image->h << endl;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -231,7 +233,6 @@ Gfx::Texture* Gfx::LoadTexture(const char * path) {
 }
 
 void Gfx::UseTextureUnit(int tunit) {
-    GLuint texUniform = glGetUniformLocation(program, "uTexture");
     glUniform1i(texUniform, tunit);
 }
 
@@ -239,15 +240,7 @@ void Gfx::UseTextureUnit(int tunit) {
 Gfx::Quad::Quad(int id) {
     this->id = id;
     this->renderData = new GLfloat[4 * 8];
-
-    renderData[8 * 0 + 2] = 0.0f;
-    renderData[8 * 0 + 3] = 1.0f;
-    renderData[8 * 1 + 2] = 1.0f;
-    renderData[8 * 1 + 3] = 1.0f;
-    renderData[8 * 2 + 2] = 1.0f;
-    renderData[8 * 2 + 3] = 0.0f;
-    renderData[8 * 3 + 2] = 0.0f;
-    renderData[8 * 3 + 3] = 0.0f;
+    this->SetSubTexture(0, 0, 1, 1, 1, 1);
 }
 
 Gfx::Quad::~Quad() {
@@ -284,6 +277,22 @@ void Gfx::Quad::SetColor(float r, float g, float b, float a) {
     renderData[8 * 3 + 7] = a;
 }
 
+void Gfx::Quad::SetSubTexture(float x, float y, float w, float h, float sw, float sh) {
+    float x1 = x / sw;
+    float y1 = y / sh;
+    float x2 = (x + w) / sw;
+    float y2 = (y + h) / sh;
+
+    renderData[8 * 0 + 2] = x1;
+    renderData[8 * 0 + 3] = y1;
+    renderData[8 * 1 + 2] = x2;
+    renderData[8 * 1 + 3] = y1;
+    renderData[8 * 2 + 2] = x2;
+    renderData[8 * 2 + 3] = y2;
+    renderData[8 * 3 + 2] = x1;
+    renderData[8 * 3 + 3] = y2;
+}
+
 void Gfx::Quad::BufferData() {
     Gfx::BufferData(id * 32 * sizeof(GLfloat), 32 * sizeof(GLfloat), renderData);
 }
@@ -291,6 +300,8 @@ void Gfx::Quad::BufferData() {
 Gfx::Texture::Texture(GLuint id, SDL_Surface* image) {
     this->id = id;
     this->image = image;
+    this->width = image->w;
+    this->height = image->h;
 }
 
 Gfx::Texture::~Texture() {

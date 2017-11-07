@@ -11,17 +11,25 @@
 
 using namespace std;
 
+class GameTimer {
+private:
+    double lt;
+    double dt;
+
+public:
+    GameTimer();
+    ~GameTimer();
+    double GetDt();
+};
+
 class Game {
 private:
-    Gfx::Quad* quad;
-    double lastTime;
+    GameTimer* timer;
 
-    double t;
 public:
     Game();
     ~Game();
 
-    void Triangle(float size, float x, float y);
     void tick();
     void render();
 };
