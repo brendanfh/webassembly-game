@@ -259,22 +259,12 @@ void Gfx::Quad::SetRect(float x, float y, float w, float h) {
 }
 
 void Gfx::Quad::SetColor(float r, float g, float b, float a) {
-    renderData[8 * 0 + 4] = r;
-    renderData[8 * 0 + 5] = g;
-    renderData[8 * 0 + 6] = b;
-    renderData[8 * 0 + 7] = a;
-    renderData[8 * 1 + 4] = r;
-    renderData[8 * 1 + 5] = g;
-    renderData[8 * 1 + 6] = b;
-    renderData[8 * 1 + 7] = a;
-    renderData[8 * 2 + 4] = r;
-    renderData[8 * 2 + 5] = g;
-    renderData[8 * 2 + 6] = b;
-    renderData[8 * 2 + 7] = a;
-    renderData[8 * 3 + 4] = r;
-    renderData[8 * 3 + 5] = g;
-    renderData[8 * 3 + 6] = b;
-    renderData[8 * 3 + 7] = a;
+    for (int i = 0; i < 4; i++) {
+        renderData[8 * i + 4] = r;
+        renderData[8 * i + 5] = g;
+        renderData[8 * i + 6] = b;
+        renderData[8 * i + 7] = a;
+    }
 }
 
 void Gfx::Quad::SetSubTexture(float x, float y, float w, float h, float sw, float sh) {

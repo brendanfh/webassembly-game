@@ -35,10 +35,10 @@ namespace Gfx {
         GLuint id;
         SDL_Surface* image;
 
+    public:
         float width;
         float height;
 
-    public:
         Texture(GLuint id, SDL_Surface* image);
         ~Texture();
         void Use(int tuint = 0);

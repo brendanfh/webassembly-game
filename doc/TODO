@@ -31,3 +31,8 @@ Improvements:
   ✔ Implement a GameTimer class to clean up the Game class @started(17-11-06 18:17) @done(17-11-06 18:21) @lasted(4 minutes 44 seconds)
 
 The game:
+  ✔ Entity system @started(17-11-06 19:14) @done(17-11-06 19:53) @lasted(39 minutes 18 seconds)
+    ✔ Abstract entity class @done(17-11-06 19:39)
+  ☐ Implement Shooting bullets
+    ☐ Bullets should be deleted correctly (no memory leaks)
+  ☐ Store everything in a world class

@@ -30,15 +30,19 @@ Game::Game() {
     Gfx::SetSize(16.0f, 12.0f);
 
     timer = new GameTimer();
+    player = new Player(0);
 }
 
 Game::~Game() {
     cout << "Destuctor was called" << endl;
+    delete timer;
+    delete player;
 }
 
-#define TAU (3.1415926595 * 2)
 void Game::tick() {
-    double dt = timer->GetDt();
+    float dt = (float) timer->GetDt();
+
+    player->Tick(dt);
 
     Keys::Tick();
     Mouse::Tick();
@@ -47,6 +51,8 @@ void Game::tick() {
 void Game::render() {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    player->Render();
 
     Gfx::SetupDraw();
     glDrawElements(GL_TRIANGLES, 1024, GL_UNSIGNED_INT, (void*) 0);
