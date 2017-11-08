@@ -9,7 +9,7 @@ Bullet::Bullet(int id, float x, float y, float dx, float dy, Entity* owner) : En
 
     life = 2.0f;
     quad->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-    quad->SetSubTexture(0.0f, 0.0f, 0.5f, 0.5f, 1.0f, 1.0f);
+    quad->SetSubTexture(0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 Bullet::~Bullet() {
@@ -22,8 +22,6 @@ void Bullet::Tick(float dt) {
     life -= dt;
 
     if (life < 0) {
-        cout << "SHOULD DIEEEEEE!!!!" << endl;
-
         quad->SetRect(0.0f, 0.0f, 0.0f, 0.0f);
         quad->BufferData();
         world->RemoveEntity(this);

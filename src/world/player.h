@@ -6,6 +6,7 @@
 #include "world.h"
 #include "bullet.h"
 
+#include <cmath>
 #include <iostream>
 
 using namespace std;

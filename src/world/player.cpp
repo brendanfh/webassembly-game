@@ -15,7 +15,16 @@ Player::~Player() {
 }
 
 void Player::Fire() {
-    Bullet* bullet = new Bullet(-1, x, y, 5, 0, this);
+    float mx, my;
+    Mouse::GetScreenPos(mx, my);
+
+    float bulletSpeed = 10.0f;
+
+    float a = atan2(my - y, mx - x);
+    float dx = cos(a) * bulletSpeed;
+    float dy = sin(a) * bulletSpeed;
+
+    Bullet* bullet = new Bullet(-1, x, y, dx, dy, this);
     this->world->AddEntity(bullet);
 }
 

@@ -29,6 +29,7 @@ World::~World() {
     for (it = entities->begin(); it != entities->end(); it++) {
         delete *it;
     }
+    delete entities;
 }
 
 void World::AddEntity(Entity* entity) {
@@ -41,11 +42,11 @@ void World::RemoveEntity(Entity* entity) {
     int i;
     for (i = 0; i < entities->size(); i++) {
         if ((*entities)[i] == entity) {
-            cout << "Found entity" << endl;
             break;
         }
     }
 
+    delete *(entities->begin() + i);
     entities->erase(entities->begin() + i);
 }
 

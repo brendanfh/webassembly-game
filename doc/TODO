@@ -34,5 +34,5 @@ The game:
   ✔ Entity system @started(17-11-06 19:14) @done(17-11-06 19:53) @lasted(39 minutes 18 seconds)
     ✔ Abstract entity class @done(17-11-06 19:39)
   ✔ Implement Shooting bullets @started(17-11-07 15:43) @done(17-11-07 16:54) @lasted(1 hour 11 minutes 47 seconds)
-    ☐ Bullets should be deleted correctly (no memory leaks) @high
+    ✔ Bullets should be deleted correctly (no memory leaks) @high @done(17-11-08 10:13)
   ✔ Store everything in a world class @started(17-11-07 15:24) @done(17-11-07 15:43) @lasted(19 minutes 3 seconds)
