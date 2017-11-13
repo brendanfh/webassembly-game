@@ -32,8 +32,8 @@ Game::Game() {
     timer = new GameTimer();
     world = new World();
 
-    gameTexture = Gfx::LoadTexture("res/test.png");
-    gameTexture->Use(0);
+    mainTexture = Gfx::LoadTexture("res/tilemap.png");
+    mainTexture->Use(0);
 
     Player* ply = new Player(0);
     world->AddEntity(ply);

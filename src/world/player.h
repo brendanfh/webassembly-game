@@ -3,6 +3,7 @@
 
 #include "../input.h"
 #include "../gfx.h"
+#include "../utils/animator.h"
 #include "world.h"
 #include "bullet.h"
 
@@ -15,6 +16,8 @@ class Player : public Entity {
 private:
     float x;
     float y;
+
+    Animator* anim;
 
 public:
     Player(int id);

@@ -28,7 +28,7 @@ class Game {
 private:
     GameTimer* timer;
     World* world;
-    Gfx::Texture* gameTexture;
+    Gfx::Texture* mainTexture;
 
 public:
     Game();
