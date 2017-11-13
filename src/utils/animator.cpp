@@ -48,13 +48,9 @@ void Animation::Tick(float dt) {
     }
 }
 
-void Animation::Render() {
-    //Really don't think this is necessesary but wth
-}
-
-Animator::Animator(int numAnimations) {
-    animations = new Animation[numAnimations];
-    this->numAnimations = numAnimations;
+Animator::Animator(int numAnims) {
+    animations = new Animation[numAnims];
+    numAnimations = numAnims;
     activeAnimation = 0;
 }
 

@@ -31,7 +31,6 @@ public:
 
     void ApplyToQuad(Gfx::Quad* quad);
     void Tick(float dt);
-    void Render(); //Do I need this?
 };
 
 class Animator {
