@@ -1,5 +1,5 @@
 #include "emscripten.h"
-#include "game.h"
+#include "game.hpp"
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <iostream>

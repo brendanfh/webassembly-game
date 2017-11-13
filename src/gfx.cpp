@@ -1,4 +1,4 @@
-#include "gfx.h"
+#include "gfx.hpp"
 
 //Have to declare these somewhere...
 GLFWwindow* Gfx::window = NULL;

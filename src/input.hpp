@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "gfx.h"
+#include "gfx.hpp"
 
 using namespace std;
 
@@ -15,17 +15,15 @@ private:
     static bool keys[];
     static bool prevKeys[];
 
-    Keys();
-    ~Keys();
+    Keys() { }
+    ~Keys() { }
     
 public:
     static void Initialize();
     static bool IsDown(int code);
     static bool IsJustDown(int code);
     static bool IsUp(int code);
-
     static void Tick();
-
 };
 
 class Mouse {
@@ -39,11 +37,12 @@ private:
 
     static bool buttons[];
 
-    Mouse();
-    ~Mouse();
+    Mouse() { }
+    ~Mouse() { }
 
 public:
     static void Initialize();
+
     static bool IsButtonDown(int button);
     static void GetRawPos(float &x, float &y);
     static void GetScreenPos(float &x, float &y);

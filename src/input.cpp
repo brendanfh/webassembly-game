@@ -1,9 +1,6 @@
-#include "input.h"
+#include "input.hpp"
 
 //Keyboard class functions
-Keys::Keys() { }
-Keys::~Keys() { }
-
 bool Keys::keys[Keys::NUM_KEYS];
 bool Keys::prevKeys[Keys::NUM_KEYS];
 void Keys::Initialize() {
@@ -40,9 +37,6 @@ void Keys::Tick() {
 
 
 //Mouse class functions
-Mouse::Mouse() { }
-Mouse::~Mouse() { }
-
 bool Mouse::buttons[Mouse::NUM_BUTTONS];
 float Mouse::x = 0.0f;
 float Mouse::y = 0.0f;
