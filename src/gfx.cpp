@@ -43,6 +43,9 @@ void Gfx::Initialize() {
     }
     glfwMakeContextCurrent(Gfx::window);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ibo);
 
