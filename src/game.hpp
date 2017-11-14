@@ -61,12 +61,13 @@ public:
 
         Player* ply = new Player();
         ply->SetRenderOrder(1);
-
-        Enemy* enemy = new Enemy(ply);
-        enemy->SetRenderOrder(0);
-
-        world->AddEntity(enemy);
         world->AddEntity(ply);
+
+        for (int i = 0; i < 500; i++) {
+            Enemy* enemy = new Enemy(ply);
+            enemy->SetRenderOrder(0);
+            world->AddEntity(enemy);
+        }
     }
 
     ~Game() {
@@ -91,7 +92,7 @@ public:
         world->Render();
 
         Gfx::SetupDraw();
-        glDrawElements(GL_TRIANGLES, MAX_QUADS, GL_UNSIGNED_INT, (void*) 0);
+        glDrawElements(GL_TRIANGLES, MAX_QUADS * 6, GL_UNSIGNED_SHORT, (void*) 0);
         Gfx::CleanupDraw();
     }
 };

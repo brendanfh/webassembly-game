@@ -4,6 +4,7 @@
 
 #include "world.hpp"
 
+#include <cstdlib>
 #include <cmath>
 #include <iostream>
 
@@ -20,8 +21,8 @@ public:
         
         this->target = target;
 
-        x = 0.0f;
-        y = 0.0f;
+        x = 1.0f * (rand() % 10);
+        y = 1.0f * (rand() % 10);
 
         quad->SetRect(x, y, 0.5f, 0.5f);
 
