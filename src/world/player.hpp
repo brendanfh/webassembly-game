@@ -14,13 +14,10 @@ using namespace std;
 
 class Player : public Entity {
 private:
-    float x;
-    float y;
-
     Animator* anim;
 
 public:
-    Player(int id) : Entity(id) {
+    Player() : Entity() {
         quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         x = 0.0f;
@@ -58,7 +55,7 @@ public:
         float dx = cos(a) * bulletSpeed;
         float dy = sin(a) * bulletSpeed;
 
-        Bullet* bullet = new Bullet(-1, fx, fy, dx, dy, this);
+        Bullet* bullet = new Bullet(fx, fy, dx, dy, this);
         this->world->AddEntity(bullet);
     }
 

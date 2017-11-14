@@ -87,16 +87,16 @@ void Gfx::Initialize() {
     projUniform = glGetUniformLocation(program, "uProjection");
     texUniform = glGetUniformLocation(program, "uTexture");
 
-    GLfloat* emptyData = new GLfloat[4 * 8 * 1024];
-    for (int i = 0; i < 4 * 8 * 1024; i++)
+    GLfloat* emptyData = new GLfloat[4 * 8 * MAX_QUADS];
+    for (int i = 0; i < 4 * 8 * MAX_QUADS; i++)
         emptyData[i] = 0.0f;
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * 8 * 1024, emptyData, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * 8 * MAX_QUADS, emptyData, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, NULL);
 
-    GLuint* indexData = new GLuint[6 * 1024];
-    for (int i = 0; i < 1024; i++) {
+    GLuint* indexData = new GLuint[6 * MAX_QUADS];
+    for (int i = 0; i < MAX_QUADS; i++) {
         indexData[i * 6 + 0] = i * 4 + 0;
         indexData[i * 6 + 1] = i * 4 + 1;
         indexData[i * 6 + 2] = i * 4 + 2;
@@ -106,7 +106,7 @@ void Gfx::Initialize() {
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * 1024, indexData, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * MAX_QUADS, indexData, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
 
     Gfx::SetSize(1.0f, 1.0f);

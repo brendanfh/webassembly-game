@@ -1,6 +1,8 @@
 #ifndef __GFX_H_
 #define __GFX_H_
 
+#define MAX_QUADS 1024
+
 #define GLFW_INCLUDE_ES3
 
 #include <GLFW/glfw3.h>

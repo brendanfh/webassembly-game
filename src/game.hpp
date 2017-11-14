@@ -9,6 +9,7 @@
 #include "gfx.hpp"
 #include "input.hpp"
 #include "world/player.hpp"
+#include "world/enemy.hpp"
 #include "world/world.hpp"
 
 using namespace std;
@@ -58,7 +59,13 @@ public:
         mainTexture = Gfx::LoadTexture("res/tilemap.png");
         mainTexture->Use(0);
 
-        Player* ply = new Player(0);
+        Player* ply = new Player();
+        ply->SetRenderOrder(1);
+
+        Enemy* enemy = new Enemy(ply);
+        enemy->SetRenderOrder(0);
+
+        world->AddEntity(enemy);
         world->AddEntity(ply);
     }
 
@@ -84,7 +91,7 @@ public:
         world->Render();
 
         Gfx::SetupDraw();
-        glDrawElements(GL_TRIANGLES, 1024, GL_UNSIGNED_INT, (void*) 0);
+        glDrawElements(GL_TRIANGLES, MAX_QUADS, GL_UNSIGNED_INT, (void*) 0);
         Gfx::CleanupDraw();
     }
 };

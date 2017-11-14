@@ -3,6 +3,7 @@
 
 #include "../gfx.hpp"
 #include <vector>
+#include <algorithm>
 
 class World;
 class Entity;
@@ -14,17 +15,25 @@ protected:
     Gfx::Quad* quad;
 
 public:
+    float x;
+    float y;
     World* world;
 
-    Entity(int renderOrder) {
-        quad = new Gfx::Quad(renderOrder);
+    Entity() {
+        quad = new Gfx::Quad(-1);
     }
 
     ~Entity() {
+        quad->SetRect(0, 0, 0, 0);
+        quad->BufferData();
         delete quad;
     }
 
     void SetRenderOrder(int renderOrder) {
+        if (renderOrder < quad->id) {
+            quad->SetRect(0, 0, 0, 0);
+            quad->BufferData();
+        }
         quad->id = renderOrder;
     }
 
@@ -34,14 +43,10 @@ public:
 
 class World {
 private:
-    int nextId;
-
     vector<Entity*>* entities;
 
 public:
     World() {
-        nextId = 0;
-
         entities = new vector<Entity*>();
     }
 
@@ -55,7 +60,6 @@ public:
 
     void AddEntity(Entity* entity) {
         entity->world = this;
-        entity->SetRenderOrder(nextId++);
         entities->push_back(entity);
     }
 
@@ -78,7 +82,12 @@ public:
     }
 
     void Render() {
+        std::sort(entities->begin(), entities->end(), [](Entity* a, Entity* b) {
+            return a->y < b->y;
+        });
+
         for (int i = 0; i < entities->size(); i++) {
+            (*entities)[i]->SetRenderOrder(i);
             (*entities)[i]->Render();
         }
     }

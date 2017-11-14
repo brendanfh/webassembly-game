@@ -19,7 +19,7 @@ private:
     Entity* owner;
 
 public:
-    Bullet(int id, float x, float y, float dx, float dy, Entity* owner) : Entity(id) {
+    Bullet(float x, float y, float dx, float dy, Entity* owner) : Entity() {
         this->x = x;
         this->y = y;
         this->dx = dx;

@@ -36,7 +36,7 @@ The game:
   ✔ Implement Shooting bullets @started(17-11-07 15:43) @done(17-11-07 16:54) @lasted(1 hour 11 minutes 47 seconds)
     ✔ Bullets should be deleted correctly (no memory leaks) @high @done(17-11-08 10:13)
   ✔ Store everything in a world class @started(17-11-07 15:24) @done(17-11-07 15:43) @lasted(19 minutes 3 seconds)
-    ☐ Manage ids better because right now they suck
+    ✔ Manage ids better because right now they suck @done(17-11-13 18:29)
   ✔ Animation system @started(17-11-13 10:17) @done(17-11-13 10:49) @lasted(32 minutes 57 seconds)
     ✔ Animation class for a single animation @done(17-11-13 10:33)
   ☐ Tilemap system
