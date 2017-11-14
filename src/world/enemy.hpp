@@ -15,16 +15,22 @@ private:
     Animator* anim;
     Entity* target;
 
+protected:
+    void UpdateCollRect() override {
+        collRect->Set(x + 3.0f/16.0f, y + 9.0f/16.0f, 11.0f/16.0f, 7.0f/16.0f);
+    }
+
 public:
     Enemy(Entity* target) : Entity() {
+        type = EntityType_Enemy;
         quad ->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         this->target = target;
 
-        x = 1.0f * (rand() % 10);
+        x = 1.0f * (rand() % 10) + 4.0f;
         y = 1.0f * (rand() % 10);
 
-        quad->SetRect(x, y, 0.5f, 0.5f);
+        drawRect->Set(x, y, 1.0f, 1.0f);
 
         anim = new Animator(4);
         anim->SetAnimation(0, 0, 2, 16, 16, 512, 512, 2, 0.2f); //Walking Right
@@ -32,6 +38,8 @@ public:
         anim->SetAnimation(2, 2, 2, 16, 16, 512, 512, 2, 0.2f); //Walking Down
         anim->SetAnimation(3, 2, 3, 16, 16, 512, 512, 2, 0.2f); //Walking Up
         anim->ApplyToQuad(quad);
+
+        UpdateCollRect();
     }
 
     ~Enemy() {
@@ -45,7 +53,7 @@ public:
         float tx = target->x - x;
         float ty = target->y - y;
 
-        if (tx * tx + ty * ty < 0.25f) {
+        if (tx * tx + ty * ty < 1.0f) {
             //Close enough to target
         } else {
             float a = atan2(ty, tx);
@@ -65,14 +73,13 @@ public:
                 anim->SetActive(2);
             }
 
-            x += dx * dt;
-            y += dy * dt;
+            Move(dx * dt, dy * dt, 10);
+            UpdateDrawRects();
             anim->Tick(dt);
         }
     }
 
     void Render() override {
-        quad->SetRect(x, y, 1.0f, 1.0f);
         anim->ApplyToQuad(quad);
         quad->BufferData(); 
     }

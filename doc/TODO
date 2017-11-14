@@ -40,5 +40,5 @@ The game:
   ✔ Animation system @started(17-11-13 10:17) @done(17-11-13 10:49) @lasted(32 minutes 57 seconds)
     ✔ Animation class for a single animation @done(17-11-13 10:33)
   ☐ Tilemap system
-  ☐ Collisions
-    ☐ Entity should have a rectangle
+  ✔ Collisions @started(17-11-14 14:41) @done(17-11-14 16:47) @lasted(2 hours 6 minutes 54 seconds)
+    ✔ Entity should have a rectangle @done(17-11-14 16:47)

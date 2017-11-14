@@ -16,14 +16,20 @@ class Player : public Entity {
 private:
     Animator* anim;
 
+protected:
+    void UpdateCollRect() override {
+        collRect->Set(x + 3.0f/16.0f, y + 9.0f/16.0f, 11.0f/16.0f, 7.0f/16.0f);
+    }
+
 public:
     Player() : Entity() {
+        type = EntityType_Player;
         quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         x = 0.0f;
         y = 0.0f;
 
-        quad->SetRect(x, y, 2.0f, 2.0f);
+        drawRect->Set(x, y, 1.0f, 1.0f);
 
         float walkingAnimSpeed = 0.2f;
 
@@ -35,6 +41,9 @@ public:
         anim->SetAnimation(4, 4, 0, 16, 16, 512, 512, 2, walkingAnimSpeed); // Walking down
         anim->SetAnimation(5, 4, 1, 16, 16, 512, 512, 2, walkingAnimSpeed); // Walking up
         anim->ApplyToQuad(quad);
+
+        UpdateCollRect();
+        UpdateDrawRects();
     }
 
     ~Player() {
@@ -55,7 +64,7 @@ public:
         float dx = cos(a) * bulletSpeed;
         float dy = sin(a) * bulletSpeed;
 
-        Bullet* bullet = new Bullet(fx, fy, dx, dy, this);
+        Bullet* bullet = new Bullet(fx + dx * 0.1f, fy + dy * 0.1f, dx, dy, this);
         this->world->AddEntity(bullet);
     }
 
@@ -66,34 +75,36 @@ public:
             this->Fire();
         }
 
-        float px = x;
-        float py = y;
+        float dx = 0;
+        float dy = 0;
 
         if (Keys::IsDown(GLFW_KEY_A)) {
-            x -= 4.0f * dt;
+            dx += -4.0f * dt;
             anim->SetActive(3);
         }
         if (Keys::IsDown(GLFW_KEY_D)) {
-            x += 4.0f * dt;
+            dx += 4.0f * dt;
             anim->SetActive(2);
         }
         if (Keys::IsDown(GLFW_KEY_W)) {
-            y -= 4.0f * dt;
+            dy += -4.0f * dt;
             anim->SetActive(5);
         }
         if (Keys::IsDown(GLFW_KEY_S)) {
-            y += 4.0f * dt;
+            dy += 4.0f * dt;
             anim->SetActive(4);
         }
 
-        if (px != x || py != y) {
+        if (dx != 0 || dy != 0) {
+            Move(dx, dy, 100);
+
             anim->Tick(dt);
+            UpdateDrawRects();
         }
     }
     void Render() override { 
-        quad->SetRect(x, y, 1.0f, 1.0f);
         anim->ApplyToQuad(quad);
-        quad->BufferData();
+        quad->BufferData(); 
     }
 };
 

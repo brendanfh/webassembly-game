@@ -9,8 +9,6 @@ using namespace std;
 
 class Bullet : public Entity {
 private:
-    float x;
-    float y;
     float dx;
     float dy;
 
@@ -20,6 +18,8 @@ private:
 
 public:
     Bullet(float x, float y, float dx, float dy, Entity* owner) : Entity() {
+        type = EntityType_Bullet;
+
         this->x = x;
         this->y = y;
         this->dx = dx;
@@ -29,6 +29,9 @@ public:
         life = 2.0f;
         quad->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
         quad->SetSubTexture(31 * 16, 31 * 16, 16, 16, 512, 512);
+
+        drawRect->Set(x, y, 0.25f, 0.25f);
+        UpdateCollRect();
     }
 
     ~Bullet() {
@@ -36,19 +39,17 @@ public:
     }
 
     void Tick(float dt) override {
-        x += dx * dt;
-        y += dy * dt;
+        Move(dx * dt, dy * dt, 10);
+        UpdateDrawRects();
+
         life -= dt;
 
         if (life < 0) {
-            quad->SetRect(0.0f, 0.0f, 0.0f, 0.0f);
-            quad->BufferData();
             world->RemoveEntity(this);
         }
     }
 
     void Render() override {
-        quad->SetRect(x, y, 0.25f, 0.25f);
         quad->BufferData();
     }
 };

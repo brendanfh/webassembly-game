@@ -2,6 +2,8 @@
 #define __WORLD_H_
 
 #include "../gfx.hpp"
+#include "../utils/rect.hpp"
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
@@ -10,32 +12,37 @@ class Entity;
 
 using namespace std;
 
+enum EntityType {
+    EntityType_Player = 0,
+    EntityType_Enemy = 1,
+    EntityType_Bullet = 2
+};
+
 class Entity {
 protected:
+    EntityType type;
     Gfx::Quad* quad;
+    Rect* drawRect;
+    Rect* collRect;
+
+    virtual void UpdateCollRect();
 
 public:
     float x;
     float y;
     World* world;
 
-    Entity() {
-        quad = new Gfx::Quad(-1);
-    }
+    Entity();
+    ~Entity();
 
-    ~Entity() {
-        quad->SetRect(0, 0, 0, 0);
-        quad->BufferData();
-        delete quad;
-    }
+    void SetRenderOrder(int renderOrder);
 
-    void SetRenderOrder(int renderOrder) {
-        if (renderOrder < quad->id) {
-            quad->SetRect(0, 0, 0, 0);
-            quad->BufferData();
-        }
-        quad->id = renderOrder;
-    }
+    Rect* GetCollisionRect();
+    EntityType GetType();
+
+    void UpdateDrawRects();
+
+    void Move(float dx, float dy, int steps);
 
     virtual void Tick(float dt) { }
     virtual void Render() { }
@@ -73,6 +80,22 @@ public:
 
         delete *(entities->begin() + i);
         entities->erase(entities->begin() + i);
+    }
+
+    vector<Entity*>* EntitiesInRange(float x, float y, float r) {
+        float r2 = r * r;
+        vector<Entity*>* ents = new vector<Entity*>();
+
+        std::for_each(entities->begin(), entities->end(), [=](Entity*& e) {
+            float dx = (e->x - x);
+            float dy = (e->y - y);
+
+            if (dx * dx + dy * dy < r2) {
+                ents->push_back(e);
+            }
+        });
+
+        return ents;
     }
 
     void Tick(float dt) { 
