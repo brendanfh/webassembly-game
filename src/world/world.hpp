@@ -106,7 +106,7 @@ public:
 
     void Render() {
         std::sort(entities->begin(), entities->end(), [](Entity* a, Entity* b) {
-            return a->y < b->y;
+            return a->GetCollisionRect()->y < b->GetCollisionRect()->y;
         });
 
         for (int i = 0; i < entities->size(); i++) {
