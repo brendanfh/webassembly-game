@@ -30,7 +30,7 @@ public:
         quad->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
         quad->SetSubTexture(31 * 16, 31 * 16, 16, 16, 512, 512);
 
-        drawRect->Set(x, y, 0.25f, 0.25f);
+        quad->SetRect(x, y, 0.25f, 0.25f);
         UpdateCollRect();
     }
 

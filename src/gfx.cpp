@@ -243,11 +243,35 @@ void Gfx::UseTextureUnit(int tunit) {
 Gfx::Quad::Quad(int id) {
     this->id = id;
     this->renderData = new GLfloat[4 * 8];
+    for (int i = 0; i < 4 * 8; i++) {
+        renderData[i] = 0.0f;
+    }
     this->SetSubTexture(0, 0, 1, 1, 1, 1);
 }
 
 Gfx::Quad::~Quad() {
     delete[] this->renderData;
+}
+
+void Gfx::Quad::GetRect(float &x, float &y, float &w, float &h) {
+    w = renderData[8 * 1 + 0] - renderData[8 * 0 + 0];
+    h = renderData[8 * 2 + 1] - renderData[8 * 0 + 1];
+    x = renderData[0];
+    y = renderData[1];
+}
+
+void Gfx::Quad::SetPos(float x, float y) {
+    float w = renderData[8 * 1 + 0] - renderData[8 * 0 + 0];
+    float h = renderData[8 * 2 + 1] - renderData[8 * 0 + 1];
+
+    SetRect(x, y, w, h);
+}
+
+void Gfx::Quad::SetSize(float w, float h) {
+    float x = renderData[0];
+    float y = renderData[1];
+
+    SetRect(x, y, w, h);
 }
 
 void Gfx::Quad::SetRect(float x, float y, float w, float h) {

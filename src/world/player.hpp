@@ -29,7 +29,7 @@ public:
         x = 0.0f;
         y = 0.0f;
 
-        drawRect->Set(x, y, 1.0f, 1.0f);
+        quad->SetRect(x, y, 1.0f, 1.0f);
 
         float walkingAnimSpeed = 0.2f;
 
@@ -43,7 +43,6 @@ public:
         anim->ApplyToQuad(quad);
 
         UpdateCollRect();
-        UpdateDrawRects();
     }
 
     ~Player() {

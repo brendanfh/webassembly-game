@@ -27,6 +27,10 @@ namespace Gfx {
 
         Quad(int id);
         ~Quad();
+        void GetRect(float &x, float &y, float &w, float &h);
+
+        void SetPos(float x, float y);
+        void SetSize(float w, float h);
         void SetRect(float x, float y, float w, float h);
         void SetColor(float r, float g, float b, float a);
         void SetSubTexture(float x, float y, float w, float h, float sw, float sh);

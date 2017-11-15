@@ -23,14 +23,15 @@ protected:
 public:
     Enemy(Entity* target) : Entity() {
         type = EntityType_Enemy;
-        quad ->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+        quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         this->target = target;
 
         x = 1.0f * (rand() % 11) + 4.0f;
         y = 1.0f * (rand() % 11);
 
-        drawRect->Set(x, y, 1.0f, 1.0f);
+
+        quad->SetRect(x, y, 1.0f, 1.0f);
 
         anim = new Animator(4);
         anim->SetAnimation(0, 0, 2, 16, 16, 512, 512, 2, 0.2f); //Walking Right

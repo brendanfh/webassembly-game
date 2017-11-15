@@ -25,11 +25,10 @@ class Entity {
 protected:
     EntityType type;
     Gfx::Quad* quad;
-    Rect* drawRect;
     Rect* collRect;
 
     virtual void UpdateCollRect() {
-        collRect->Set(x, y, drawRect->w, drawRect->h);
+        collRect->Set(x, y, collRect->w, collRect->h);
     }
 
 public:
@@ -40,7 +39,6 @@ public:
     Entity() {
         quad = new Gfx::Quad(-1);
 
-        drawRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
         collRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
@@ -49,14 +47,16 @@ public:
         quad->BufferData();
         delete quad;
 
-        delete drawRect;
         delete collRect;
     }
 
     void SetRenderOrder(int renderOrder) {
         if (renderOrder < quad->id) {
+            float x, y, w, h;
+            quad->GetRect(x, y, w, h);
             quad->SetRect(0, 0, 0, 0);
             quad->BufferData();
+            quad->SetSize(w, h);
             UpdateDrawRects();
         }
         quad->id = renderOrder;
@@ -71,8 +71,7 @@ public:
     }
 
     void UpdateDrawRects() {
-        drawRect->Set(x, y, drawRect->w, drawRect->h);
-        quad->SetRect(x, y, drawRect->w, drawRect->h);
+        quad->SetPos(x, y);
     }
 
     void Move(float dx, float dy, int steps);
