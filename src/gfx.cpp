@@ -183,8 +183,22 @@ void Gfx::SetSize(float width, float height) {
     Gfx::width = width;
     Gfx::height = height;
 
-    glm::mat4x4 proj = glm::ortho(0.0f, Gfx::width, Gfx::height, 0.0f, -0.1f, -1000.0f);
-    glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(proj));
+    GLfloat* orthoMat = new GLfloat[16];
+    for (int i = 0; i < 16; i++) {
+        orthoMat[i] = 0.0f;
+    }
+
+    orthoMat[0 * 4 + 0] = 2 / width;
+    orthoMat[1 * 4 + 1] = 2 / -height;
+    orthoMat[2 * 4 + 2] = -2 / (-1000.0f + 0.1f);
+    orthoMat[3 * 4 + 3] = 1;
+
+    orthoMat[3 * 4 + 0] = -1;
+    orthoMat[3 * 4 + 1] = 1;
+    orthoMat[3 * 4 + 2] = -(-1000.0f + -0.1f) / (-1000.0f - -0.1f);
+
+    glUniformMatrix4fv(projUniform, 1, GL_FALSE, orthoMat);
+    delete[] orthoMat;
 }
 
 void Gfx::BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data) {

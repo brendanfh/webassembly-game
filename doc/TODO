@@ -29,6 +29,8 @@ Implement an Input System:
 
 Improvements:
   ✔ Implement a GameTimer class to clean up the Game class @started(17-11-06 18:17) @done(17-11-06 18:21) @lasted(4 minutes 44 seconds)
+  ✔ Remove GLM as a dependency @started(17-11-15 12:44) @done(17-11-15 12:53) @lasted(9 minutes 28 seconds)
+    ✔ Write own orthographics matrix @done(17-11-15 12:53)
 
 The game:
   ✔ Entity system @started(17-11-06 19:14) @done(17-11-06 19:53) @lasted(39 minutes 18 seconds)
