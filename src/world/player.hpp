@@ -96,7 +96,7 @@ public:
         }
 
         if (dx != 0 || dy != 0) {
-            Move(dx, dy, 100);
+            Move(dx, dy, 10);
 
             anim->Tick(dt);
             UpdateDrawRects();

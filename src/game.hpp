@@ -63,7 +63,7 @@ public:
         ply->SetRenderOrder(1);
         world->AddEntity(ply);
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 100; i++) {
             Enemy* enemy = new Enemy(ply);
             enemy->SetRenderOrder(0);
             world->AddEntity(enemy);

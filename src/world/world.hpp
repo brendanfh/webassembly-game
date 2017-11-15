@@ -26,22 +26,52 @@ protected:
     Rect* drawRect;
     Rect* collRect;
 
-    virtual void UpdateCollRect();
+    virtual void UpdateCollRect() {
+        collRect->Set(x, y, drawRect->w, drawRect->h);
+    }
 
 public:
     float x;
     float y;
     World* world;
 
-    Entity();
-    ~Entity();
+    Entity() {
+        quad = new Gfx::Quad(-1);
 
-    void SetRenderOrder(int renderOrder);
+        drawRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
+        collRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
+    }
 
-    Rect* GetCollisionRect();
-    EntityType GetType();
+    ~Entity() {
+        quad->SetRect(0, 0, 0, 0);
+        quad->BufferData();
+        delete quad;
 
-    void UpdateDrawRects();
+        delete drawRect;
+        delete collRect;
+    }
+
+    void SetRenderOrder(int renderOrder) {
+        if (renderOrder < quad->id) {
+            quad->SetRect(0, 0, 0, 0);
+            quad->BufferData();
+            UpdateDrawRects();
+        }
+        quad->id = renderOrder;
+    }
+
+    Rect* GetCollisionRect() {
+        return collRect;
+    }
+
+    EntityType GetType() {
+        return type;
+    }
+
+    void UpdateDrawRects() {
+        drawRect->Set(x, y, drawRect->w, drawRect->h);
+        quad->SetRect(x, y, drawRect->w, drawRect->h);
+    }
 
     void Move(float dx, float dy, int steps);
 
@@ -117,48 +147,8 @@ public:
     }
 };
 
-void Entity::UpdateCollRect() {
-    collRect->Set(x, y, drawRect->w, drawRect->h);
-}
 
-Entity::Entity() {
-    quad = new Gfx::Quad(-1);
-
-    drawRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
-    collRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
-}
-
-Entity::~Entity() {
-    quad->SetRect(0, 0, 0, 0);
-    quad->BufferData();
-    delete quad;
-
-    delete drawRect;
-    delete collRect;
-}
-
-void Entity::SetRenderOrder(int renderOrder) {
-    if (renderOrder < quad->id) {
-        quad->SetRect(0, 0, 0, 0);
-        quad->BufferData();
-        UpdateDrawRects();
-    }
-    quad->id = renderOrder;
-}
-
-Rect* Entity::GetCollisionRect() {
-    return collRect;
-}
-
-EntityType Entity::GetType() {
-    return type;
-}
-
-void Entity::UpdateDrawRects() {
-    drawRect->Set(x, y, drawRect->w, drawRect->h);
-    quad->SetRect(x, y, drawRect->w, drawRect->h);
-}
-
+//This has to be at the bottom because it references "RectsInRange", which has not been defined at the top yet.
 void Entity::Move(float dx, float dy, int steps) {
     float ddx = dx / steps;
     float ddy = dy / steps;
