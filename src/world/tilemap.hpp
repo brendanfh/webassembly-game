@@ -105,6 +105,10 @@ public:
 
     ~Tilemap() {
         delete[] tiles;
+
+        for (int i = 0; i < w * h; i++) {
+            delete rects[i];
+        }
         delete[] rects;
     }
 
