@@ -3,6 +3,8 @@
 
 #include "../gfx.hpp"
 #include "../utils/rect.hpp"
+#include "tilemap.hpp"
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -82,10 +84,16 @@ public:
 class World {
 private:
     vector<Entity*>* entities;
+    Tilemap* tilemap;
 
 public:
     World() {
         entities = new vector<Entity*>();
+        tilemap = new Tilemap(16, 12);
+
+        for (int y = 0; y < 12; y++) {
+            tilemap->SetTile(8, y, 1);
+        }
     }
 
     ~World() {
@@ -126,6 +134,13 @@ public:
             }
         });
 
+        vector<Rect*>* tiles = tilemap->GetSolidTiles(x, y, r);
+        std::for_each(tiles->begin(), tiles->end(), [=](Rect*& rect) {
+            rects->push_back(rect);
+        });
+
+        delete tiles;
+
         return rects;
     }
 
@@ -140,8 +155,10 @@ public:
             return a->collRect->y < b->collRect->y;
         });
 
+        tilemap->Render();
+
         for (int i = 0; i < entities->size(); i++) {
-            (*entities)[i]->SetRenderOrder(i);
+            (*entities)[i]->SetRenderOrder(i + 500);
             (*entities)[i]->Render();
         }
     }

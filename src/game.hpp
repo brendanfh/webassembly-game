@@ -11,6 +11,7 @@
 #include "world/player.hpp"
 #include "world/enemy.hpp"
 #include "world/world.hpp"
+#include "world/tilemap.hpp"
 
 using namespace std;
 
@@ -50,6 +51,7 @@ public:
         Gfx::Initialize();
         Keys::Initialize();
         Mouse::Initialize();
+        Tile::Initialize();
 
         Gfx::SetSize(16.0f, 12.0f);
 

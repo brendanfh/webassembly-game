@@ -39,6 +39,7 @@ The game:
     ✔ Manage ids better because right now they suck @done(17-11-13 18:29)
   ✔ Animation system @started(17-11-13 10:17) @done(17-11-13 10:49) @lasted(32 minutes 57 seconds)
     ✔ Animation class for a single animation @done(17-11-13 10:33)
-  ☐ Tilemap system
+  ✔ Tilemap system @started(17-11-14 22:14) @done(17-11-14 23:08) @lasted(54 minutes 15 seconds)
+    ☐ Fix any bugs that are definitely in the Tilemap
   ✔ Collisions @started(17-11-14 14:41) @done(17-11-14 16:47) @lasted(2 hours 6 minutes 54 seconds)
     ✔ Entity should have a rectangle @done(17-11-14 16:47)
