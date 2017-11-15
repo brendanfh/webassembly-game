@@ -19,6 +19,7 @@ enum EntityType {
 };
 
 class Entity {
+    friend World;
 protected:
     EntityType type;
     Gfx::Quad* quad;
@@ -82,20 +83,20 @@ public:
         entities->erase(entities->begin() + i);
     }
 
-    vector<Entity*>* EntitiesInRange(float x, float y, float r) {
+    vector<Rect*>* RectsInRange(float x, float y, float r) {
         float r2 = r * r;
-        vector<Entity*>* ents = new vector<Entity*>();
+        vector<Rect*>* rects = new vector<Rect*>();
 
         std::for_each(entities->begin(), entities->end(), [=](Entity*& e) {
             float dx = (e->x - x);
             float dy = (e->y - y);
 
             if (dx * dx + dy * dy < r2) {
-                ents->push_back(e);
+                rects->push_back(e->collRect);
             }
         });
 
-        return ents;
+        return rects;
     }
 
     void Tick(float dt) { 
@@ -106,7 +107,7 @@ public:
 
     void Render() {
         std::sort(entities->begin(), entities->end(), [](Entity* a, Entity* b) {
-            return a->GetCollisionRect()->y < b->GetCollisionRect()->y;
+            return a->collRect->y < b->collRect->y;
         });
 
         for (int i = 0; i < entities->size(); i++) {
@@ -116,5 +117,90 @@ public:
     }
 };
 
+void Entity::UpdateCollRect() {
+    collRect->Set(x, y, drawRect->w, drawRect->h);
+}
+
+Entity::Entity() {
+    quad = new Gfx::Quad(-1);
+
+    drawRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
+    collRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+Entity::~Entity() {
+    quad->SetRect(0, 0, 0, 0);
+    quad->BufferData();
+    delete quad;
+
+    delete drawRect;
+    delete collRect;
+}
+
+void Entity::SetRenderOrder(int renderOrder) {
+    if (renderOrder < quad->id) {
+        quad->SetRect(0, 0, 0, 0);
+        quad->BufferData();
+        UpdateDrawRects();
+    }
+    quad->id = renderOrder;
+}
+
+Rect* Entity::GetCollisionRect() {
+    return collRect;
+}
+
+EntityType Entity::GetType() {
+    return type;
+}
+
+void Entity::UpdateDrawRects() {
+    drawRect->Set(x, y, drawRect->w, drawRect->h);
+    quad->SetRect(x, y, drawRect->w, drawRect->h);
+}
+
+void Entity::Move(float dx, float dy, int steps) {
+    float ddx = dx / steps;
+    float ddy = dy / steps;
+
+    vector<Rect*>* ents = world->RectsInRange(x + 0.5f, y + 0.5f, 2.0f + (dx * dx + dy * dy));
+
+    bool xdone = false;
+    bool ydone = false;
+    bool collided = false;
+    for (int i = 0; i < steps; i++) {
+        if (!xdone && ddx != 0) {
+            x += ddx;
+            this->UpdateCollRect();
+            collided = std::any_of(ents->begin(), ents->end(), [=](Rect* r) {
+                if (r == this->collRect) return false;
+                return r->Intersects(*this->collRect);
+            });
+
+            if (collided) {
+                x -= ddx;
+                this->UpdateCollRect();
+                xdone = true;
+            }
+        }
+        if (!ydone && ddy != 0) {
+            y += ddy;
+            this->UpdateCollRect();
+            collided = std::any_of(ents->begin(), ents->end(), [=](Rect* r) {
+                if (r == this->collRect) return false;
+                return r->Intersects(*this->collRect);
+            });
+
+            if (collided) {
+                y -= ddy;
+                this->UpdateCollRect();
+                ydone = true;
+            }
+        }
+    }
+    this->UpdateCollRect();
+    
+    delete ents;
+}
 
 #endif
