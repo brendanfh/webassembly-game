@@ -16,6 +16,11 @@ private:
 
     Entity* owner;
 
+protected:
+    void UpdateCollRect() override {
+        collRect->Set(x, y, 0.25f, 0.25f);
+    }
+
 public:
     Bullet(float x, float y, float dx, float dy, Entity* owner) : Entity() {
         type = EntityType_Bullet;
@@ -31,7 +36,6 @@ public:
         quad->SetSubTexture(31 * 16, 31 * 16, 16, 16, 512, 512);
 
         quad->SetRect(x, y, 0.25f, 0.25f);
-        UpdateCollRect();
     }
 
     ~Bullet() {
