@@ -45,3 +45,4 @@ The game:
     ☐ Fix any bugs that are definitely in the Tilemap
   ✔ Collisions @started(17-11-14 14:41) @done(17-11-14 16:47) @lasted(2 hours 6 minutes 54 seconds)
     ✔ Entity should have a rectangle @done(17-11-14 16:47)
+  ✔ Implement a state system @done(17-11-17 14:26)

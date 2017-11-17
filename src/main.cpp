@@ -8,8 +8,8 @@ using namespace std;
 
 Game* game;
 void mainLoop() {
-    game->tick();
-    game->render();
+    game->Tick();
+    game->Render();
     glfwPollEvents();
 }
 
