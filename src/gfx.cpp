@@ -108,6 +108,9 @@ void Gfx::Initialize() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * 6 * MAX_QUADS, indexData, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
+    
+    delete[] emptyData;
+    delete[] indexData;
 
     Gfx::SetSize(1.0f, 1.0f);
     SetupResize();
@@ -207,6 +210,15 @@ void Gfx::BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data) {
     glBindBuffer(GL_ARRAY_BUFFER, NULL);
 }
 
+void Gfx::ClearData(int start, int count) {
+    GLfloat* empty = new GLfloat[count * 4 * 8];
+    for (int i = 0; i < count * 4 * 8; i++) {
+        empty[i] = 0.0f;
+    }
+    Gfx::BufferData(4 * 8 * start * sizeof(GLfloat), 4 * 8 * count * sizeof(GLfloat), empty);
+    delete[] empty;
+}
+
 void Gfx::SetupDraw() {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -228,6 +240,44 @@ void Gfx::CleanupDraw() {
     glDisableVertexAttribArray(2);
 }
 
+void Gfx::DrawRect(int id, float x, float y, float w, float h, float r, float g, float b, float a) {
+    GLfloat* data = new GLfloat[4 * 8];
+    data[0 * 8 + 0] = x;
+    data[0 * 8 + 1] = y;
+    data[0 * 8 + 2] = 31.0f / 32.0f;
+    data[0 * 8 + 3] = 31.0f / 32.0f;
+    data[0 * 8 + 4] = r;
+    data[0 * 8 + 5] = g;
+    data[0 * 8 + 6] = b;
+    data[0 * 8 + 7] = a;
+    data[1 * 8 + 0] = x + w;
+    data[1 * 8 + 1] = y;
+    data[1 * 8 + 2] = 1.0f;
+    data[1 * 8 + 3] = 31.0f / 32.0f;
+    data[1 * 8 + 4] = r;
+    data[1 * 8 + 5] = g;
+    data[1 * 8 + 6] = b;
+    data[1 * 8 + 7] = a;
+    data[2 * 8 + 0] = x + w;
+    data[2 * 8 + 1] = y + h;
+    data[2 * 8 + 2] = 1.0f;
+    data[2 * 8 + 3] = 1.0f;
+    data[2 * 8 + 4] = r;
+    data[2 * 8 + 5] = g;
+    data[2 * 8 + 6] = b;
+    data[2 * 8 + 7] = a;
+    data[3 * 8 + 0] = x;
+    data[3 * 8 + 1] = y + h;
+    data[3 * 8 + 2] = 31.0f / 32.0f;
+    data[3 * 8 + 3] = 1.0f;
+    data[3 * 8 + 4] = r;
+    data[3 * 8 + 5] = g;
+    data[3 * 8 + 6] = b;
+    data[3 * 8 + 7] = a;
+    
+    Gfx::BufferData(id * 4 * 8 * sizeof(GLfloat), 4 * 8 * sizeof(GLfloat), data);
+    delete[] data;
+}
 
 Gfx::Texture* Gfx::LoadTexture(const char * path) {
     SDL_Surface* image;

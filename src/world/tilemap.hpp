@@ -51,7 +51,9 @@ public:
 
 class GrassTile : public Tile {
 public:
-    GrassTile(int id) : Tile(id) {
+    static const int id = 0;
+    
+    GrassTile() : Tile(GrassTile::id) {
         quad->SetColor(0.1f, 0.9f, 0.2f, 1.0f);
         quad->SetSubTexture(31.0f, 31.0f, 1.0f, 1.0f, 32.0f, 32.0f);
     }
@@ -59,7 +61,9 @@ public:
 
 class StoneTile : public Tile {
 public:
-    StoneTile(int id) : Tile(id) {
+    static const int id = 1;
+
+    StoneTile() : Tile(StoneTile::id) {
         this->solid = true;
         quad->SetColor(0.4f, 0.4f, 0.4f, 1.0f);
         quad->SetSubTexture(31.0f, 31.0f, 1.0f, 1.0f, 32.0f, 32.0f);
@@ -69,8 +73,8 @@ public:
 void Tile::Initialize() {
     Tiles = new vector<Tile*>(100);
 
-    new GrassTile(0);
-    new StoneTile(1);
+    new GrassTile();
+    new StoneTile();
 }
 
 void Tile::Uninitialize() {

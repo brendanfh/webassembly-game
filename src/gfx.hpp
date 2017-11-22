@@ -1,7 +1,7 @@
 #ifndef __GFX_H_
 #define __GFX_H_
 
-#define MAX_QUADS 1024
+#define MAX_QUADS 4096
 
 #define GLFW_INCLUDE_ES3
 
@@ -61,8 +61,11 @@ namespace Gfx {
     void SetSize(float width, float height);
 
     void BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data);
+    void ClearData(int start, int count);
     void SetupDraw();
     void CleanupDraw();
+    
+    void DrawRect(int id, float x, float y, float w, float h, float r, float g, float b, float a);
 
     Gfx::Texture* LoadTexture(const char * path);
     void UseTextureUnit(int unit);

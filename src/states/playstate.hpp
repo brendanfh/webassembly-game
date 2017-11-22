@@ -1,11 +1,6 @@
 #ifndef __PLAYSTATE_H_
 #define __PLAYSTATE_H_
 
-#define GLFW_INCLUDE_ES3
-
-#include <GLFW/glfw3.h>
-#include <iostream>
-
 #include "../gfx.hpp"
 #include "../input.hpp"
 #include "../world/player.hpp"
@@ -16,6 +11,7 @@
 #include "../utils/font.hpp"
 
 #include "../game.hpp"
+#include "pausestate.hpp"
 
 class PlayState : public GameState {
     World* world;
@@ -26,14 +22,7 @@ public:
         world = new World();
         
         ply = new Player();
-        ply->SetRenderOrder(1);
         world->AddEntity(ply);
-    
-        for (int i = 0; i < 100; i++) {
-            Enemy* enemy = new Enemy(ply);
-            enemy->SetRenderOrder(0);
-            world->AddEntity(enemy);
-        }
     }
     
     ~PlayState() {
@@ -42,16 +31,15 @@ public:
     
     void Tick(float dt) override {
         world->Tick(dt); 
-        
-        if (Keys::IsDown(GLFW_KEY_Z)) {
-            Game::SetState(NULL);
+        if (Keys::IsJustDown(GLFW_KEY_P)) {
+            Game::SetState(new PauseState(this));
         }
     }
     
     void Render() override {
         world->Render();
         
-        Gfx::Font::Draw("Test1234 Aj", 900, ply->x, ply->y, 1.0f);
+        Gfx::Font::Draw("Test1234 Aj", 900, ply->x, ply->y, 0.4f);
     }
 };
 

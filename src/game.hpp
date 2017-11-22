@@ -77,6 +77,7 @@ public:
 
 //Include states here because the game class has actaully been defined now
 #include "states/playstate.hpp"
+#include "states/pausestate.hpp"
 
 GameState* Game::state = NULL;
 Game::Game() {
