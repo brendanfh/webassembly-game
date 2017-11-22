@@ -1,0 +1,13 @@
+Character:
+    Wizard
+
+World:
+    2D Birdeye
+
+Game Play:
+    Use magic abilities to fight the enemies
+    Randomized dungeons
+    Level up abilities at cost of XP
+        - XP can also be used for more lives
+    
+    Run out of lives and you die
