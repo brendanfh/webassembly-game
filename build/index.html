@@ -5,13 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Emscripten-Generated Code</title>
     <style>
-      body { background-color: rgb(20, 20, 20); }
+      body { background-color: rgb(20, 20, 20); margin: 0; padding: 0;}
       .emscripten { color: white; padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       textarea.emscripten { color: black;font-family: monospace; width: 80%; }
       div.emscripten { text-align: center; }
       /* div.emscripten_border { border: 1px solid black; } */
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-      canvas.emscripten { border: 0px none; background-color: black; }
+      canvas.emscripten { border: 0px none; background-color: black; margin: 0; position: absolute; padding: 0; width: 100%; height: 100% }
 
       .spinner {
         height: 50px;
@@ -64,7 +64,7 @@
                                                                                 document.getElementById('resize').checked)">
     </div>
     
-    <textarea readonly class="emscripten" id="output" rows="8"></textarea>
+    
     <script type='text/javascript'>
       var statusElement = document.getElementById('status');
       var progressElement = document.getElementById('progress');
@@ -74,29 +74,12 @@
         preRun: [],
         postRun: [],
         print: (function() {
-          var element = document.getElementById('output');
-          if (element) element.value = ''; // clear browser cache
           return function(text) {
-            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-            // These replacements are necessary if you render to raw HTML
-            //text = text.replace(/&/g, "&amp;");
-            //text = text.replace(/</g, "&lt;");
-            //text = text.replace(/>/g, "&gt;");
-            //text = text.replace('\n', '<br>', 'g');
             console.log(text);
-            if (element) {
-              element.value += text + "\n";
-              element.scrollTop = element.scrollHeight; // focus on bottom
-            }
           };
         })(),
         printErr: function(text) {
-          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-          if (0) { // XXX disabled for safety typeof dump == 'function') {
-            dump(text + '\n'); // fast, straight to the real console
-          } else {
             console.error(text);
-          }
         },
         canvas: (function() {
           var canvas = document.getElementById('canvas');
@@ -142,6 +125,12 @@
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
+
+      window.addEventListener("keydown", function(ev) {
+        if (ev.which == 61) {
+          Module.requestFullscreen(false, true);
+        }
+      });
     </script>
     <script async type="text/javascript" src="index.js"></script>
   </body>
