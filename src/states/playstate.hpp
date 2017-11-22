@@ -13,15 +13,19 @@
 #include "../world/world.hpp"
 #include "../world/tilemap.hpp"
 
+#include "../utils/font.hpp"
+
 #include "../game.hpp"
 
 class PlayState : public GameState {
     World* world;
+    
+    Player* ply;
 public:
     PlayState() : GameState(NULL) {
         world = new World();
         
-        Player* ply = new Player();
+        ply = new Player();
         ply->SetRenderOrder(1);
         world->AddEntity(ply);
     
@@ -46,6 +50,8 @@ public:
     
     void Render() override {
         world->Render();
+        
+        Gfx::Font::Draw("Test1234 Aj", 900, ply->x, ply->y, 1.0f);
     }
 };
 
