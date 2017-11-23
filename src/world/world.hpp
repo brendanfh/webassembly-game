@@ -70,7 +70,7 @@ public:
         return type;
     }
 
-    void UpdateDrawRects() {
+    virtual void UpdateDrawRects() {
         quad->SetPos(x, y);
     }
 

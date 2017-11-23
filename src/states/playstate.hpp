@@ -41,12 +41,14 @@ public:
     void Render() override {
         world->Render();
         
-        Gfx::Font::Draw("Test1234 Aj", 900, ply->x, ply->y, 0.4f);
+        //Player is rounded to the nearest 100th so this makes sure
+        //the text is right above the player 
+        float x = floor(ply->x * 100) / 100.0f;
+        float y = floor(ply->y * 100) / 100.0f;
+        Gfx::Font::Draw("Test1234 Aj", 900, x, y, 0.4f);
 
-        float xx = (ply->x - Gfx::width / 2) / 2.0f;
-        float yy = (ply->y - Gfx::height / 2) / 2.0f;
-        xx = floor(xx * Gfx::width) / Gfx::width;
-        yy = floor(yy * Gfx::height) / Gfx::height;
+        float xx = (x - Gfx::width / 2) / 2.0f;
+        float yy = (y - Gfx::height / 2) / 2.0f;
         Gfx::CenterOn(xx + Gfx::width / 2, yy + Gfx::height / 2);
     }
 };

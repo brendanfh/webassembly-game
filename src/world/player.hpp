@@ -18,7 +18,7 @@ private:
 
 protected:
     void UpdateCollRect() override {
-        collRect->Set(x + 3.0f/16.0f, y + 9.0f/16.0f, 11.0f/16.0f, 7.0f/16.0f);
+        collRect->Set(x + 2.0f/16.0f, y + 9.0f/16.0f, 12.0f/16.0f, 7.0f/16.0f);
     }
 
 public:
@@ -97,10 +97,19 @@ public:
         if (dx != 0 || dy != 0) {
             Move(dx, dy, 10);
 
+            // x = floor(x * 150) / 150.0f;
+            // y = floor(y * 100) / 100.0f;
+
             anim->Tick(dt);
             UpdateDrawRects();
         }
     }
+
+    //Have to round to the nearest 100th otherwise tilemap has artifacts
+    void UpdateDrawRects() override {
+        quad->SetPos(floor(x * 100) / 100.0f, floor(y * 100) / 100.0f);
+    }
+
     void Render() override { 
         anim->ApplyToQuad(quad);
         quad->BufferData(); 
