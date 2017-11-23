@@ -9,6 +9,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -59,6 +60,8 @@ namespace Gfx {
     GLuint CreateProgram(GLuint vertShader, GLuint fragShader);
 
     void SetSize(float width, float height);
+    void SetOffset(float x, float y);
+    void CenterOn(float x, float y);
 
     void BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data);
     void ClearData(int start, int count);

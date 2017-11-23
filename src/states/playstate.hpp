@@ -1,6 +1,8 @@
 #ifndef __PLAYSTATE_H_
 #define __PLAYSTATE_H_
 
+#include <cmath>
+
 #include "../gfx.hpp"
 #include "../input.hpp"
 #include "../world/player.hpp"
@@ -40,6 +42,12 @@ public:
         world->Render();
         
         Gfx::Font::Draw("Test1234 Aj", 900, ply->x, ply->y, 0.4f);
+
+        float xx = (ply->x - Gfx::width / 2) / 2.0f;
+        float yy = (ply->y - Gfx::height / 2) / 2.0f;
+        xx = floor(xx * Gfx::width) / Gfx::width;
+        yy = floor(yy * Gfx::height) / Gfx::height;
+        Gfx::CenterOn(xx + Gfx::width / 2, yy + Gfx::height / 2);
     }
 };
 

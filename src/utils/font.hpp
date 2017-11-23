@@ -64,9 +64,10 @@ namespace Gfx {
                 
                 q->SetSubTexture(startx + c % 62, starty + c / 62, 1, 1, 64, 64);
                 q->SetRect(lx, y, size, size);
-                lx += CharWidth(c, size);
                 q->id = indexStart + i;
                 q->BufferData();
+
+                lx += CharWidth(c, size);
             }
             
             delete q;

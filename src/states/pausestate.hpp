@@ -27,7 +27,7 @@ public:
         parent->Render(); 
         
         Gfx::DrawRect(2000, 0, 0, Gfx::width, Gfx::height, 0, 0, 0, 0.7f);
-        
+
         float w = Gfx::Font::GetWidth("Paused", 1.0f);
         Gfx::Font::Draw("Paused", 2001, (Gfx::width - w) / 2, (Gfx::height - 1.0f) / 2, 1.0f);
     }

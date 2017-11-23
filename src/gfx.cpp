@@ -16,6 +16,7 @@ GLuint ibo = -1;
 
 GLuint texUniform = -1;
 GLuint projUniform = -1;
+GLuint worldUniform = -1;
 
 void SetupResize() {
     auto resizeFunc = [](GLFWwindow* window, int width, int height) {
@@ -54,6 +55,7 @@ void Gfx::Initialize() {
         "attribute vec2 aTexCoord; \n"
         "attribute vec4 aColor;    \n"
         "uniform mat4 uProjection; \n"
+        "uniform mat4 uWorld;      \n"
         "\n"
         "varying vec4 vColor;      \n"
         "varying vec2 vTexCoord;   \n"
@@ -61,7 +63,7 @@ void Gfx::Initialize() {
         "void main() {\n"
         "   vColor = aColor;"
         "   vTexCoord = aTexCoord;"
-        "	gl_Position = uProjection * vec4(aPosition, 1.0, 1.0);\n"
+        "	gl_Position = uProjection * uWorld * vec4(aPosition, 1.0, 1.0);\n"
         "}";
 
     char fragShaderSrc[] =
@@ -86,6 +88,7 @@ void Gfx::Initialize() {
 
     projUniform = glGetUniformLocation(program, "uProjection");
     texUniform = glGetUniformLocation(program, "uTexture");
+    worldUniform = glGetUniformLocation(program, "uWorld");
 
     GLfloat* emptyData = new GLfloat[4 * 8 * MAX_QUADS];
     for (int i = 0; i < 4 * 8 * MAX_QUADS; i++)
@@ -114,6 +117,7 @@ void Gfx::Initialize() {
 
     Gfx::SetSize(1.0f, 1.0f);
     SetupResize();
+    Gfx::SetOffset(0.0f, 0.0f);
 
     Gfx::UseTextureUnit(0);
 }
@@ -202,6 +206,27 @@ void Gfx::SetSize(float width, float height) {
 
     glUniformMatrix4fv(projUniform, 1, GL_FALSE, orthoMat);
     delete[] orthoMat;
+}
+
+void Gfx::SetOffset(float x, float y) {
+    GLfloat* wldMat = new GLfloat[16];
+    for (int i = 0; i < 16; i++) {
+        wldMat[i] = 0.0f;
+    }
+
+    wldMat[0 * 4 + 0] = 1;
+    wldMat[1 * 4 + 1] = 1;
+    wldMat[2 * 4 + 2] = 1;
+    wldMat[3 * 4 + 3] = 1;
+    wldMat[3 * 4 + 0] = x;
+    wldMat[3 * 4 + 1] = y;
+
+    glUniformMatrix4fv(worldUniform, 1, GL_FALSE, wldMat);
+    delete[] wldMat;
+}
+
+void Gfx::CenterOn(float x, float y) {
+    Gfx::SetOffset(Gfx::width / 2 - x, Gfx::height / 2 - y);
 }
 
 void Gfx::BufferData(GLintptr offset, GLsizeiptr size, const GLfloat* data) {
