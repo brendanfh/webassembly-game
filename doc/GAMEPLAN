@@ -9,5 +9,8 @@ Game Play:
     Randomized dungeons
     Level up abilities at cost of XP
         - XP can also be used for more lives
+
+    Each enemy is weak to some elements but resistant to others
+    You have to figure out which enemies are which
     
     Run out of lives and you die

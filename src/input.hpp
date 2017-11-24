@@ -97,8 +97,8 @@ public:
     }
     
     static void GetScreenPos(float &x, float &y) {
-        x = Mouse::x * (Gfx::width / Gfx::canvasWidth);
-        y = Mouse::y * (Gfx::height / Gfx::canvasHeight);
+        x = Mouse::x * (Gfx::width / Gfx::canvasWidth) - Gfx::offsetX;
+        y = Mouse::y * (Gfx::height / Gfx::canvasHeight) - Gfx::offsetY;
     }
     
     static void Tick() { }

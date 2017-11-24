@@ -38,13 +38,19 @@ public:
         delete quad;
     }
 
-    virtual Rect* GetRect(int x, int y) {
-        return new Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    virtual Rect GetRect(int x, int y) {
+        return Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    Rect* GetRectPtr(int x, int y) {
+        Rect r = this->GetRect(x, y);
+        Rect* rptr = new Rect(r.x, r.y, r.w, r.h);
+        return rptr;
     }
 
     virtual void Render(int id, int x, int y) {
         quad->id = id;
-        quad->SetRect(x, y, TILE_SIZE, TILE_SIZE);
+        quad->SetRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         quad->BufferData();
     }
 };
@@ -102,7 +108,7 @@ public:
         rects = new Rect*[w * h];
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                rects[x + y * w] = GetTile(x, y)->GetRect(x, y);
+                rects[x + y * w] = GetTile(x, y)->GetRectPtr(x, y);
             }
         }
     }
@@ -126,7 +132,7 @@ public:
         tiles[x + y * w] = id;
 
         delete rects[x + y * w];
-        rects[x + y * w] = (*Tiles)[id]->GetRect(x, y);
+        rects[x + y * w] = (*Tiles)[id]->GetRectPtr(x, y);
     }
 
     vector<Rect*>* GetSolidTiles(float x, float y, float r) {

@@ -6,6 +6,8 @@ float Gfx::width = 0.0f;
 float Gfx::height = 0.0f;
 float Gfx::canvasWidth = 0.0f;
 float Gfx::canvasHeight = 0.0f;
+float Gfx::offsetX = 0.0f;
+float Gfx::offsetY = 0.0f;
 
 //These are privated because they are not declared in the header
 GLuint program = -1;
@@ -209,6 +211,9 @@ void Gfx::SetSize(float width, float height) {
 }
 
 void Gfx::SetOffset(float x, float y) {
+    offsetX = x;
+    offsetY = y;
+
     GLfloat* wldMat = new GLfloat[16];
     for (int i = 0; i < 16; i++) {
         wldMat[i] = 0.0f;

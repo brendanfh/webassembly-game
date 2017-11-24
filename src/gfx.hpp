@@ -54,6 +54,8 @@ namespace Gfx {
     extern float height;
     extern float canvasWidth; //Width of the canvas element
     extern float canvasHeight;
+    extern float offsetX;
+    extern float offsetY;
 
     void Initialize();
     GLuint CompileShader(GLenum shaderType, const char *shaderSrc);
