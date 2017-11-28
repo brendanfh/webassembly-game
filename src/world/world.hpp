@@ -103,6 +103,10 @@ public:
         delete entities;
     }
 
+    Tilemap* GetTilemap() {
+        return tilemap;
+    }
+
     void AddEntity(Entity* entity) {
         entity->world = this;
         entities->push_back(entity);

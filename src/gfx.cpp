@@ -39,7 +39,7 @@ void Gfx::Initialize() {
     if (!glfwInit())
         exit(EXIT_FAILURE);
 
-    Gfx::window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+    Gfx::window = glfwCreateWindow(960, 480, "Simple example", NULL, NULL);
     if (!Gfx::window) {
         glfwTerminate();
         exit(EXIT_FAILURE);

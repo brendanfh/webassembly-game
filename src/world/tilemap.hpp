@@ -92,6 +92,9 @@ void Tile::Uninitialize() {
 
 class Tilemap {
 private:
+    int x; //where the tilemap exists in world space
+    int y;
+
     int w;
     int h;
     int* tiles;
@@ -100,6 +103,9 @@ private:
 
 public:
     Tilemap(int w, int h) : w(w), h(h) {
+        x = 0;
+        y = 0;
+
         tiles = new int[w * h];
         for (int i = 0; i < w * h; i++) {
             tiles[i] = 0;
@@ -156,11 +162,27 @@ public:
         return rs;
     }
 
+    int GetX() {
+        return x;
+    }
+
+    int GetY() {
+        return y;
+    }
+
+    int TotalWidth() {
+        return w * TILE_SIZE;
+    }
+
+    int TotalHeight() {
+        return h * TILE_SIZE;
+    }
+
     void Render() {
         int did = 0;
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                GetTile(x, y)->Render(did++, x, y);
+                GetTile(x, y)->Render(did++, x + this->x, y + this->y);
             }
         }
     }
