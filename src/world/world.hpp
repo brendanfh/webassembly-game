@@ -88,7 +88,7 @@ private:
 public:
     World() {
         entities = new vector<Entity*>();
-        tilemap = new Tilemap(16, 12);
+        tilemap = new Tilemap(32, 24);
 
         for (int y = 0; y < 12; y++) {
             tilemap->SetTile(8, y, 1);
@@ -159,9 +159,10 @@ public:
         });
 
         tilemap->Render();
+        int tt = tilemap->GetW() * tilemap->GetH() + 1;
 
         for (int i = 0; i < entities->size(); i++) {
-            (*entities)[i]->SetRenderOrder(i + 500);
+            (*entities)[i]->SetRenderOrder(i + tt);
             (*entities)[i]->Render();
         }
     }

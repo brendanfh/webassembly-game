@@ -60,8 +60,8 @@ public:
     static const int id = 0;
     
     GrassTile() : Tile(GrassTile::id) {
-        quad->SetColor(0.1f, 0.9f, 0.2f, 1.0f);
-        quad->SetSubTexture(31.0f, 31.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+        quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+        quad->SetSubTexture(0.0f, 9.0f, 1.0f, 1.0f, 32.0f, 32.0f);
     }
 };
 
@@ -168,6 +168,14 @@ public:
 
     int GetY() {
         return y;
+    }
+
+    int GetW() {
+        return w;
+    }
+
+    int GetH() {
+        return h;
     }
 
     int TotalWidth() {

@@ -53,7 +53,7 @@ public:
         float ty = world->GetTilemap()->GetY();
         float xx = ((x + tx) - tw / 2) / 2.0f;
         float yy = ((y + ty) - th / 2) / 2.0f;
-        Gfx::CenterOn(xx + Gfx::width / 2, yy + Gfx::height / 2);
+        Gfx::CenterOn(xx + tw / 2, yy + th / 2);
     }
 };
 
