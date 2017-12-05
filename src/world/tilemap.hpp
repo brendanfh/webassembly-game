@@ -157,7 +157,7 @@ public:
                     }
                 }
             }
-        } 
+        }
 
         return rs;
     }

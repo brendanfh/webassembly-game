@@ -22,6 +22,9 @@ enum EntityType {
 
 class Entity {
     friend World;
+private:
+    void Move2(vector<Entity*>* ents, vector<Rect*>* rects, float dx, float dy);
+
 protected:
     EntityType type;
     Gfx::Quad* quad;
@@ -83,7 +86,15 @@ public:
 
     void Move(float dx, float dy, int steps);
 
-    virtual void OnCollision(Entity* other, Rect* collRect, float dx, float dy) { }
+    virtual void OnTileCollision(int tx, int ty, float dx, float dy) {
+        x -= dx;
+        y -= dy;
+    }
+
+    virtual void OnCollision(Entity* other, float dx, float dy) {
+        x -= dx;
+        y -= dy;
+    }
 
     virtual void Tick(float dt) { }
     virtual void Render() { }
@@ -91,12 +102,12 @@ public:
 
 class World {
 private:
-    vector<Entity*>* entities;
+    vector<Entity*> entities;
     Tilemap* tilemap;
 
 public:
     World() {
-        entities = new vector<Entity*>();
+        entities = vector<Entity*>();
         tilemap = new Tilemap(32, 24);
 
         for (int y = 0; y < 12; y++) {
@@ -106,10 +117,10 @@ public:
 
     ~World() {
         vector<Entity*>::iterator it;
-        for (it = entities->begin(); it != entities->end(); it++) {
+        for (it = entities.begin(); it != entities.end(); it++) {
             delete *it;
         }
-        delete entities;
+        //delete entities;
     }
 
     Tilemap* GetTilemap() {
@@ -118,65 +129,58 @@ public:
 
     void AddEntity(Entity* entity) {
         entity->world = this;
-        entities->push_back(entity);
+        entities.push_back(entity);
     }
 
     void RemoveEntity(Entity* entity) {
         int i;
-        for (i = 0; i < entities->size(); i++) {
-            if ((*entities)[i] == entity) {
+        for (i = 0; i < entities.size(); i++) {
+            if (entities[i] == entity) {
                 break;
             }
         }
 
-        delete *(entities->begin() + i);
-        entities->erase(entities->begin() + i);
+        delete *(entities.begin() + i);
+        entities.erase(entities.begin() + i);
     }
 
-    vector<Rect*>* RectsInRange(float x, float y, float r) {
+    vector<Entity*>* EntsInRange(float x, float y, float r) {
         float r2 = r * r;
-        vector<Rect*>* rects = new vector<Rect*>();
+        vector<Entity*>* ents = new vector<Entity*>();
 
-        std::for_each(entities->begin(), entities->end(), [=](Entity*& e) {
+        std::for_each(entities.begin(), entities.end(), [=](Entity*& e) {
             float dx = (e->x - x);
             float dy = (e->y - y);
 
             if (dx * dx + dy * dy < r2) {
-                rects->push_back(e->collRect);
+                ents->push_back(e);
             }
         });
 
-        vector<Rect*>* tiles = tilemap->GetSolidTiles(x, y, r);
-        std::for_each(tiles->begin(), tiles->end(), [=](Rect*& rect) {
-            rects->push_back(rect);
-        });
-
-        delete tiles;
-
-        return rects;
+        return ents;
     }
 
     void Tick(float dt) { 
-        for (int i = 0; i < entities->size(); i++) {
-            (*entities)[i]->Tick(dt);
+        for (int i = 0; i < entities.size(); i++) {
+            entities[i]->Tick(dt);
 
-            if (!(*entities)[i]->IsAlive()) {
-                RemoveEntity((*entities)[i]);
+            if (!entities[i]->IsAlive()) {
+                RemoveEntity(entities[i]);
             }
         }
     }
 
     void Render() {
-        std::sort(entities->begin(), entities->end(), [](Entity* a, Entity* b) {
+        std::sort(entities.begin(), entities.end(), [](Entity* a, Entity* b) {
             return a->collRect->y < b->collRect->y;
         });
 
         tilemap->Render();
         int tt = tilemap->GetW() * tilemap->GetH() + 1;
 
-        for (int i = 0; i < entities->size(); i++) {
-            (*entities)[i]->SetRenderOrder(i + tt);
-            (*entities)[i]->Render();
+        for (int i = 0; i < entities.size(); i++) {
+            entities[i]->SetRenderOrder(i + tt);
+            entities[i]->Render();
         }
     }
 };
@@ -187,44 +191,47 @@ void Entity::Move(float dx, float dy, int steps) {
     float ddx = dx / steps;
     float ddy = dy / steps;
 
-    vector<Rect*>* ents = world->RectsInRange(x + 0.5f, y + 0.5f, 2.0f + (dx * dx + dy * dy));
+    vector<Entity*>* ents = world->EntsInRange(x + 0.5f, y + 0.5f, 2.0f + (dx * dx + dy * dy));
+
+    Entity* tmp;
+    int tx, ty;
 
     bool xdone = false;
     bool ydone = false;
     bool collided = false;
     for (int i = 0; i < steps; i++) {
         if (!xdone && ddx != 0) {
-            x += ddx;
-            this->UpdateCollRect();
-            collided = std::any_of(ents->begin(), ents->end(), [=](Rect* r) {
-                if (r == this->collRect) return false;
-                return r->Intersects(*this->collRect);
-            });
-
-            if (collided) {
-                x -= ddx;
-                this->UpdateCollRect();
-                xdone = true;
-            }
+            xdone = Move2(ents, ddx, 0);
         }
         if (!ydone && ddy != 0) {
-            y += ddy;
-            this->UpdateCollRect();
-            collided = std::any_of(ents->begin(), ents->end(), [=](Rect* r) {
-                if (r == this->collRect) return false;
-                return r->Intersects(*this->collRect);
-            });
-
-            if (collided) {
-                y -= ddy;
-                this->UpdateCollRect();
-                ydone = true;
-            }
+            ydone = Move2(ents, 0, ddy);
         }
     }
     this->UpdateCollRect();
     
     delete ents;
+}
+
+bool Entity::Move2(vector<Entity*>* ents, float dx, float dy) {
+    x += dx;
+    y += dy;
+
+    Entity* tmp;
+    int tx, ty;
+
+    this->UpdateCollRect();
+    collided = any_of(ents->begin(), ents->end(), [=](Entity* e) {
+        if (e == this) return false;
+        tmp = e;
+        return e->collRect->Intersects(*this->collRect);
+    });
+
+    if (collided) {
+        OnCollision(tmp, dx, dy);
+        this->UpdateCollRect();
+        return true;
+    } else {
+    }
 }
 
 #endif
