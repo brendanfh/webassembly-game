@@ -97,9 +97,6 @@ public:
         if (dx != 0 || dy != 0) {
             Move(dx, dy, 10);
 
-            // x = floor(x * 150) / 150.0f;
-            // y = floor(y * 100) / 100.0f;
-
             anim->Tick(dt);
             UpdateDrawRects();
         }

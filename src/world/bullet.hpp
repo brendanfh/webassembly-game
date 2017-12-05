@@ -49,7 +49,7 @@ public:
         life -= dt;
 
         if (life < 0) {
-            world->RemoveEntity(this);
+            alive = false;
         }
     }
 

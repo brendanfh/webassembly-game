@@ -27,6 +27,8 @@ protected:
     Gfx::Quad* quad;
     Rect* collRect;
 
+    bool alive;
+
     virtual void UpdateCollRect() {
         collRect->Set(x, y, collRect->w, collRect->h);
     }
@@ -38,6 +40,7 @@ public:
 
     Entity() {
         quad = new Gfx::Quad(-1);
+        alive = true;
 
         collRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
     }
@@ -70,11 +73,17 @@ public:
         return type;
     }
 
+    bool IsAlive() {
+        return alive;
+    }
+
     virtual void UpdateDrawRects() {
         quad->SetPos(x, y);
     }
 
     void Move(float dx, float dy, int steps);
+
+    virtual void OnCollision(Entity* other, Rect* collRect, float dx, float dy) { }
 
     virtual void Tick(float dt) { }
     virtual void Render() { }
@@ -150,6 +159,10 @@ public:
     void Tick(float dt) { 
         for (int i = 0; i < entities->size(); i++) {
             (*entities)[i]->Tick(dt);
+
+            if (!(*entities)[i]->IsAlive()) {
+                RemoveEntity((*entities)[i]);
+            }
         }
     }
 
