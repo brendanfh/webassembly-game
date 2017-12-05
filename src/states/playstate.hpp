@@ -17,10 +17,10 @@
 
 class PlayState : public GameState {
     World* world;
-    
     Player* ply;
+
 public:
-    PlayState() : GameState(NULL) {
+    PlayState() : GameState() {
         world = new World();
         
         ply = new Player();
@@ -34,7 +34,7 @@ public:
     void Tick(float dt) override {
         world->Tick(dt); 
         if (Keys::IsJustDown(GLFW_KEY_P)) {
-            Game::SetState(new PauseState(this));
+            Game::AddState(new PauseState());
         }
     }
     

@@ -6,7 +6,7 @@
 
 class PauseState : public GameState {
 public:
-    PauseState(GameState* p) : GameState(p) {
+    PauseState() : GameState() {
     }
     
     ~PauseState() {
@@ -17,14 +17,13 @@ public:
     void Init() override { }
     void Tick(float dt) override {
         if (Keys::IsJustDown(GLFW_KEY_P)) {
-            Game::SetState(parent);
-            
-            delete this;
+            Game::PopState();
         }
     }
     
     void Render() override {
-        parent->Render(); 
+        //parent->Render(); 
+        Gfx::SetOffset(0, 0);
         
         Gfx::DrawRect(2000, 0, 0, Gfx::width, Gfx::height, 0, 0, 0, 0.7f);
 

@@ -5,6 +5,7 @@
 
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -40,18 +41,9 @@ public:
     }
 };
 
-//Have to declare these here because GameState friends Game
-class GameState;
-class Game; 
-
 class GameState {
-    friend Game; 
-protected:
-    GameState* parent;
-    
 public:   
-    GameState() : parent(NULL) { }
-    GameState(GameState* p) : parent(p) { }
+    GameState() { }
     ~GameState() { }
     
     virtual void Init() { }
@@ -61,7 +53,7 @@ public:
 
 class Game {
 private:
-    static GameState* state;
+    static stack<GameState*> states;
     GameTimer* timer;
     Gfx::Texture* mainTexture;
 
@@ -69,7 +61,9 @@ public:
     Game();
     ~Game();
     
-    static void SetState(GameState* s);
+    //static void SetState(GameState* s);
+    static void AddState(GameState* s);
+    static void PopState();
     
     void Tick();
     void Render();
@@ -79,7 +73,7 @@ public:
 #include "states/playstate.hpp"
 #include "states/pausestate.hpp"
 
-GameState* Game::state = NULL;
+stack<GameState*> Game::states;
 Game::Game() {
     Gfx::Initialize();
     Keys::Initialize();
@@ -93,35 +87,45 @@ Game::Game() {
     mainTexture = Gfx::LoadTexture("res/tilemap.png");
     mainTexture->Use(0);
    
-    Game::state = new PlayState(); 
+    Game::AddState(new PlayState());
 }
 
 Game::~Game() {
     cout << "Destuctor was called" << endl;
     delete timer;
-    delete Game::state;
+
+    while (!states.empty())
+        Game::PopState();
 }
 
-void Game::SetState(GameState* s) {
-    s->parent = state;
+void Game::AddState(GameState* s) {
     s->Init();
-    state = s;
+    states.push(s);
+}
+
+void Game::PopState() {
+    delete states.top();
+    states.pop(); 
 }
 
 void Game::Tick() {
+    if (states.empty()) return;
+
     float dt = (float) timer->GetDt();
 
-    Game::state->Tick(dt);
+    Game::states.top()->Tick(dt);
 
     Keys::Tick();
     Mouse::Tick();
 }
 
 void Game::Render() {
+    if (states.empty()) return;
+
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    Game::state->Render();
+    Game::states.top()->Render();
 
     Gfx::SetupDraw();
     glDrawElements(GL_TRIANGLES, MAX_QUADS * 6, GL_UNSIGNED_SHORT, (void*) 0);
