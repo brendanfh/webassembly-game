@@ -235,8 +235,8 @@ bool Entity::Move2(vector<Entity*>* ents, float dx, float dy) {
         int xx = floor(x / TILE_SIZE);
         int yy = floor(y / TILE_SIZE);
 
-        for (int yt = yy - 1; yt <= yy + 1; yt++) {
-            for (int xt = xx - 1; xt <= xx + 1; xt++) {
+        for (int yt = yy - 2; yt <= yy + 2; yt++) {
+            for (int xt = xx - 2; xt <= xx + 2; xt++) {
                 Tile* tile = world->GetTilemap()->GetTile(xt, yt);
                 
                 if (tile == NULL) continue;

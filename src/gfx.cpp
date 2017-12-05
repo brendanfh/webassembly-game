@@ -245,6 +245,7 @@ void Gfx::ClearData(int start, int count) {
     for (int i = 0; i < count * 4 * 8; i++) {
         empty[i] = 0.0f;
     }
+
     Gfx::BufferData(4 * 8 * start * sizeof(GLfloat), 4 * 8 * count * sizeof(GLfloat), empty);
     delete[] empty;
 }

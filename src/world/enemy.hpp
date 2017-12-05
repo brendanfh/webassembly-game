@@ -30,7 +30,6 @@ public:
         x = 1.0f * (rand() % 11) + 4.0f;
         y = 1.0f * (rand() % 11);
 
-
         quad->SetRect(x, y, 1.0f, 1.0f);
 
         anim = new Animator(4);

@@ -9,12 +9,12 @@ public:
     PauseState() : GameState() {
     }
     
-    ~PauseState() {
-        GameState::~GameState();
-        Gfx::ClearData(2000, 1000); 
-    }
-    
     void Init() override { }
+    void Deinit() override {
+        cout << "Removing gfx data" << endl;
+        Gfx::ClearData(2000, 1000);
+    }
+
     void Tick(float dt) override {
         if (Keys::IsJustDown(GLFW_KEY_P)) {
             Game::PopState();

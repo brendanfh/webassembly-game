@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#define TILE_SIZE 1.0f
+#define TILE_SIZE 0.5f
 
 class Tile;
 class GrassTile;

@@ -47,6 +47,7 @@ public:
     ~GameState() { }
     
     virtual void Init() { }
+    virtual void Deinit() { }
     virtual void Tick(float dt) { }
     virtual void Render() { }
 };
@@ -104,7 +105,9 @@ void Game::AddState(GameState* s) {
 }
 
 void Game::PopState() {
-    delete states.top();
+    GameState* s = states.top();
+    s->Deinit();
+    delete s;
     states.pop(); 
 }
 
