@@ -42,6 +42,10 @@ public:
         return Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
+    virtual bool IsSolid() {
+        return solid;
+    }
+
     Rect* GetRectPtr(int x, int y) {
         Rect r = this->GetRect(x, y);
         Rect* rptr = new Rect(r.x, r.y, r.w, r.h);
@@ -99,8 +103,6 @@ private:
     int h;
     int* tiles;
 
-    Rect** rects;
-
 public:
     Tilemap(int w, int h) : w(w), h(h) {
         x = 0;
@@ -110,22 +112,10 @@ public:
         for (int i = 0; i < w * h; i++) {
             tiles[i] = 0;
         }
-
-        rects = new Rect*[w * h];
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                rects[x + y * w] = GetTile(x, y)->GetRectPtr(x, y);
-            }
-        }
     }
 
     ~Tilemap() {
         delete[] tiles;
-
-        for (int i = 0; i < w * h; i++) {
-            delete rects[i];
-        }
-        delete[] rects;
     }
 
     Tile* GetTile(int x, int y) {
@@ -136,30 +126,6 @@ public:
     void SetTile(int x, int y, int id) {
         if (x < 0 || y < 0 || x >= w || y >= h) return;
         tiles[x + y * w] = id;
-
-        delete rects[x + y * w];
-        rects[x + y * w] = (*Tiles)[id]->GetRectPtr(x, y);
-    }
-
-    vector<Rect*>* GetSolidTiles(float x, float y, float r) {
-        int ix = (int) x;
-        int iy = (int) y;
-        int ir = (int) (r * 3 + 1);
-
-        vector<Rect*>* rs = new vector<Rect*>();
-
-        for (int yy = iy - ir; yy <= iy + ir; yy++) {
-            for (int xx = ix - ir; xx <= ix + ir; xx++) {
-                Tile* t = GetTile(xx, yy);
-                if (t != NULL) {
-                    if (t->solid) {
-                        rs->push_back(rects[xx + yy * w]);
-                    }
-                }
-            }
-        }
-
-        return rs;
     }
 
     int GetX() {

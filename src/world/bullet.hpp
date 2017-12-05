@@ -42,6 +42,18 @@ public:
         Entity::~Entity();
     }
 
+    void OnEntityCollision(Entity* ent, float dx, float dy) override {
+        Entity::OnEntityCollision(ent, dx, dy);
+
+        alive = false;
+    }
+
+    void OnTileCollision(int x, int y, float dx, float dy) override {
+        Entity::OnTileCollision(x, y, dx, dy);
+
+        alive = false;
+    }
+
     void Tick(float dt) override {
         Move(dx * dt, dy * dt, 10);
         UpdateDrawRects();
