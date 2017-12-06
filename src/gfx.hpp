@@ -18,6 +18,7 @@ namespace Gfx {
     class Quad {
     private:
         GLfloat* renderData;
+        bool offset;
 
     public:
         int id;
@@ -31,6 +32,7 @@ namespace Gfx {
         void SetRect(float x, float y, float w, float h);
         void SetColor(float r, float g, float b, float a);
         void SetSubTexture(float x, float y, float w, float h, float sw, float sh);
+        void SetUseOffset(bool off);
         void BufferData();
     };
 

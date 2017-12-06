@@ -337,6 +337,7 @@ void Gfx::UseTextureUnit(int tunit) {
 //Quad Class Functions
 Gfx::Quad::Quad(int id) {
     this->id = id;
+    this->offset = true;
     this->renderData = new GLfloat[4 * 8];
     for (int i = 0; i < 4 * 8; i++) {
         renderData[i] = 0.0f;
@@ -370,6 +371,11 @@ void Gfx::Quad::SetSize(float w, float h) {
 }
 
 void Gfx::Quad::SetRect(float x, float y, float w, float h) {
+    if (!offset) {
+        x -= Gfx::offsetX;
+        y -= Gfx::offsetY;
+    }
+
     renderData[8 * 0 + 0] = x;
     renderData[8 * 0 + 1] = y;
     renderData[8 * 1 + 0] = x + w;
@@ -403,6 +409,10 @@ void Gfx::Quad::SetSubTexture(float x, float y, float w, float h, float sw, floa
     renderData[8 * 2 + 3] = y2;
     renderData[8 * 3 + 2] = x1;
     renderData[8 * 3 + 3] = y2;
+}
+
+void Gfx::Quad::SetUseOffset(bool off) {
+    offset = off;
 }
 
 void Gfx::Quad::BufferData() {

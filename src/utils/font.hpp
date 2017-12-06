@@ -48,6 +48,7 @@ namespace Gfx {
         
         static void Draw(const string msg, int indexStart, float x, float y, float size, float r, float g, float b) {
             Gfx::Quad* q = new Gfx::Quad(indexStart);
+            q->SetUseOffset(false);
             q->SetColor(r, g, b, 1);
             
             int c;

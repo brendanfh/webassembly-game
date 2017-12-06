@@ -81,7 +81,7 @@ Game::Game() {
     Mouse::Initialize();
     Tile::Initialize();
 
-    Gfx::SetSize(16.0f, 12.0f);
+    Gfx::SetSize(16.0f, 9.0f);
 
     timer = new GameTimer();
 
