@@ -23,7 +23,7 @@ protected:
 
 public:
     Player() : Entity() {
-        type = EntityType_Player;
+        type = EntityType::Player;
         quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
         x = 0.0f;

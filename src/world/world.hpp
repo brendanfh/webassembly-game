@@ -14,16 +14,17 @@ class Entity;
 
 using namespace std;
 
-enum EntityType {
-    EntityType_Player = 0,
-    EntityType_Enemy = 1,
-    EntityType_Bullet = 2
+enum class EntityType {
+    Unknown,
+    Player,
+    Enemy,
+    Bullet
 };
 
 class Entity {
     friend World;
 private:
-    bool Move2(vector<Entity*>* ents, float dx, float dy);
+    virtual bool Move2(vector<Entity*>* ents, float dx, float dy) final;
 
 protected:
     EntityType type;
@@ -42,6 +43,7 @@ public:
     World* world;
 
     Entity() {
+        type = EntityType::Unknown;
         quad = new Gfx::Quad(-1);
         alive = true;
 
@@ -221,7 +223,7 @@ bool Entity::Move2(vector<Entity*>* ents, float dx, float dy) {
     this->UpdateCollRect();
 
     bool collided = false;
-    collided = any_of(ents->begin(), ents->end(), [=](Entity* e) mutable {
+    collided = any_of(ents->begin(), ents->end(), [&](Entity* e) mutable {
         if (e == this) return false;
         tmp = e;
         return e->collRect->Intersects(*this->collRect);

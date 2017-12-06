@@ -22,7 +22,7 @@ protected:
 
 public:
     Enemy(Entity* target) : Entity() {
-        type = EntityType_Enemy;
+        type = EntityType::Enemy;
         quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         this->target = target;

@@ -23,7 +23,7 @@ protected:
 
 public:
     Bullet(float x, float y, float dx, float dy, Entity* owner) : Entity() {
-        type = EntityType_Bullet;
+        type = EntityType::Bullet;
 
         this->x = x;
         this->y = y;
@@ -43,6 +43,9 @@ public:
     }
 
     void OnEntityCollision(Entity* ent, float dx, float dy) override {
+        if (ent->GetType() == EntityType::Enemy) {
+            cout << "Hit enemy" << endl;
+        }
         Entity::OnEntityCollision(ent, dx, dy);
 
         alive = false;
