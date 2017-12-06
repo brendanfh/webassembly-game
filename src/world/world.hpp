@@ -191,10 +191,10 @@ public:
         });
 
         //Tilemap::Render returns how many ids it used
-        int tt = tilemap->Render(px, py);
+        int tt = tilemap->Render(0, px, py);
 
         for (int i = 0; i < entities.size(); i++) {
-            entities[i]->SetRenderOrder(i + tt);
+            entities[i]->SetRenderOrder(i + tt + 1);
             entities[i]->Render();
         }
     }

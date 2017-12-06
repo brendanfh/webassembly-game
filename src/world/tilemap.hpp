@@ -152,8 +152,8 @@ public:
         return h * TILE_SIZE;
     }
 
-    int Render(float xo, float yo) {
-        int did = 0;
+    int Render(int startid, float xo, float yo) {
+        int did = startid;
 
         float hgw = Gfx::width / 2;
         float hgh = Gfx::height / 2;
@@ -167,8 +167,12 @@ public:
         for (int y = ym - th; y <= ym + th + 1; y++) {
             for (int x = xm - tw; x <= xm + tw + 1; x++) {
                 Tile* t = GetTile(x, y);
-                if (t == NULL) continue;
-                GetTile(x, y)->Render(did++, x + this->x, y + this->y);
+                if (t == NULL) {
+                    Gfx::ClearData(did, 1);
+                } else {
+                    t->Render(did, x + this->x, y + this->y);
+                }
+                did++;
             }
         }
 
