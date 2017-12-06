@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 
 class World;
 class Entity;
@@ -51,8 +53,10 @@ public:
     }
 
     ~Entity() {
-        quad->SetRect(0, 0, 0, 0);
-        quad->BufferData();
+        if (quad->id >= 0) {
+            quad->SetRect(0, 0, 0, 0);
+            quad->BufferData();
+        }
         delete quad;
 
         delete collRect;
@@ -108,13 +112,11 @@ private:
     Tilemap* tilemap;
 
 public:
+    friend World* loadWorld(string path);
+
     World() {
         entities = vector<Entity*>();
-        tilemap = new Tilemap(32, 24);
-
-        for (int y = 0; y < 12; y++) {
-            tilemap->SetTile(8, y, 1);
-        }
+        tilemap = new Tilemap(20, 20);
     }
 
     ~World() {
@@ -177,8 +179,19 @@ public:
             return a->collRect->y < b->collRect->y;
         });
 
-        tilemap->Render();
-        int tt = tilemap->GetW() * tilemap->GetH() + 1;
+        float px, py;
+        std::any_of(entities.begin(), entities.end(), [&](Entity* a) {
+            if (a->GetType() == EntityType::Player) {
+                px = a->x;
+                py = a->y;
+                return true;
+            }
+
+            return false;
+        });
+
+        //Tilemap::Render returns how many ids it used
+        int tt = tilemap->Render(px, py);
 
         for (int i = 0; i < entities.size(); i++) {
             entities[i]->SetRenderOrder(i + tt);
@@ -187,6 +200,35 @@ public:
     }
 };
 
+World* loadWorld(string path) {
+    SDL_Surface* img;
+    if (!(img = IMG_Load(path.c_str()))) {
+        cout << "Failed to load world " << path << endl;
+        return NULL;
+    }
+
+    Tilemap* tm = new Tilemap(img->w, img->h);
+    World* w = new World();
+
+    unsigned int* pxdata = (unsigned int*)img->pixels;
+
+    for (int y = 0; y < img->h; y++) {
+        for (int x = 0; x < img->w; x++) {
+            unsigned int col = pxdata[x + y * img->w];
+
+            if (col == 0xff000000) {
+                tm->SetTile(x, y, GrassTile::id);
+            }
+            else if (col == 0xffffffff) {
+                tm->SetTile(x, y, StoneTile::id);
+            }
+        }
+    }
+
+    w->tilemap = tm;
+
+    return w;
+}
 
 //This has to be at the bottom because it references "RectsInRange", which has not been defined at the top yet.
 void Entity::Move(float dx, float dy, int steps) {

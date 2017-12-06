@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#define TILE_SIZE 0.5f
+#define TILE_SIZE 1.0f
 
 class Tile;
 class GrassTile;
@@ -152,13 +152,27 @@ public:
         return h * TILE_SIZE;
     }
 
-    void Render() {
+    int Render(float xo, float yo) {
         int did = 0;
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
+
+        float hgw = Gfx::width / 2;
+        float hgh = Gfx::height / 2;
+
+        int tw = (int)ceil(hgw / TILE_SIZE);
+        int th = (int)ceil(hgh / TILE_SIZE);
+
+        int xm = (int)(xo / TILE_SIZE);
+        int ym = (int)(yo / TILE_SIZE);
+
+        for (int y = ym - th; y <= ym + th + 1; y++) {
+            for (int x = xm - tw; x <= xm + tw + 1; x++) {
+                Tile* t = GetTile(x, y);
+                if (t == NULL) continue;
                 GetTile(x, y)->Render(did++, x + this->x, y + this->y);
             }
         }
+
+        return did;
     }
 };
 

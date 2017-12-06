@@ -21,7 +21,7 @@ class PlayState : public GameState {
 
 public:
     PlayState() : GameState() {
-        world = new World();
+        world = loadWorld("res/map.png");
         
         ply = new Player();
         world->AddEntity(ply);
@@ -47,7 +47,7 @@ public:
         //the text is right above the player 
         float x = floor(ply->x * 100) / 100.0f;
         float y = floor(ply->y * 100) / 100.0f;
-        Gfx::Font::Draw("Test1234 Aj", 900, x, y, 0.4f);
+        Gfx::Font::Draw("Test1234 Aj", 1000, x, y, 0.4f);
 
         ///float tw = (float) world->GetTilemap()->TotalWidth();
         ///float th = (float) world->GetTilemap()->TotalHeight();
