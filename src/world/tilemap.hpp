@@ -54,7 +54,8 @@ public:
 
     virtual void Render(int id, int x, int y) {
         quad->id = id;
-        quad->SetRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        //Still need a better solution because this is still shit but it works for now
+        quad->SetRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE + 0.01f, TILE_SIZE + 0.01f);
         quad->BufferData();
     }
 };

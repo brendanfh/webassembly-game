@@ -76,21 +76,22 @@ public:
 
         float dx = 0;
         float dy = 0;
+        float speed = 4.0f;
 
         if (Keys::IsDown(GLFW_KEY_A)) {
-            dx += -4.0f * dt;
+            dx += -speed * dt;
             anim->SetActive(3);
         }
         if (Keys::IsDown(GLFW_KEY_D)) {
-            dx += 4.0f * dt;
+            dx += speed * dt;
             anim->SetActive(2);
         }
         if (Keys::IsDown(GLFW_KEY_W)) {
-            dy += -4.0f * dt;
+            dy += -speed * dt;
             anim->SetActive(5);
         }
         if (Keys::IsDown(GLFW_KEY_S)) {
-            dy += 4.0f * dt;
+            dy += speed * dt;
             anim->SetActive(4);
         }
 
@@ -103,9 +104,9 @@ public:
     }
 
     //Have to round to the nearest 100th otherwise tilemap has artifacts
-    void UpdateDrawRects() override {
-        quad->SetPos(floor(x * 100) / 100.0f, floor(y * 100) / 100.0f);
-    }
+    //void UpdateDrawRects() override {
+    //    quad->SetPos(floor(x * 100) / 100.0f, floor(y * 100) / 100.0f);
+    //}
 
     void Render() override { 
         anim->ApplyToQuad(quad);
