@@ -60,32 +60,32 @@ public:
     }
 };
 
-class GrassTile : public Tile {
+class FloorTile : public Tile {
 public:
     static const int id = 0;
     
-    GrassTile() : Tile(GrassTile::id) {
-        quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+    FloorTile() : Tile(FloorTile::id) {
+        quad->SetColor(0.5f, 0.5f, 0.5f, 1.0f);
         quad->SetSubTexture(0.0f, 9.0f, 1.0f, 1.0f, 32.0f, 32.0f);
     }
 };
 
-class StoneTile : public Tile {
+class WallTile : public Tile {
 public:
     static const int id = 1;
 
-    StoneTile() : Tile(StoneTile::id) {
+    WallTile() : Tile(WallTile::id) {
         this->solid = true;
-        quad->SetColor(0.4f, 0.4f, 0.4f, 1.0f);
-        quad->SetSubTexture(31.0f, 31.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+        quad->SetColor(0.7f, 0.7f, 0.7f, 1.0f);
+        quad->SetSubTexture(0.0f, 10.0f, 1.0f, 1.0f, 32.0f, 32.0f);
     }
 };
 
 void Tile::Initialize() {
     Tiles = new vector<Tile*>(100);
 
-    new GrassTile();
-    new StoneTile();
+    new FloorTile();
+    new WallTile();
 }
 
 void Tile::Uninitialize() {
@@ -103,6 +103,7 @@ private:
     int w;
     int h;
     int* tiles;
+    int* data;
 
 public:
     Tilemap(int w, int h) : w(w), h(h) {
@@ -110,13 +111,16 @@ public:
         y = 0;
 
         tiles = new int[w * h];
+        data = new int[w * h];
         for (int i = 0; i < w * h; i++) {
             tiles[i] = 0;
+            data[i] = 0;
         }
     }
 
     ~Tilemap() {
         delete[] tiles;
+        delete[] data;
     }
 
     Tile* GetTile(int x, int y) {
@@ -127,6 +131,16 @@ public:
     void SetTile(int x, int y, int id) {
         if (x < 0 || y < 0 || x >= w || y >= h) return;
         tiles[x + y * w] = id;
+    }
+
+    int GetData(int x, int y) {
+        if (x < 0 || y < 0 || x >= w || y >= h) return 0;
+        return data[x + y * w];
+    }
+
+    void SetData(int x, int y, int d) {
+        if (x < 0 || y < 0 || x >= w || y >= h) return;
+        data[x + y * w] = d;
     }
 
     int GetX() {

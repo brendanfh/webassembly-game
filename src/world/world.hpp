@@ -20,7 +20,8 @@ enum class EntityType {
     Unknown,
     Player,
     Enemy,
-    Bullet
+    Bullet,
+    Particle
 };
 
 class Entity {
@@ -33,7 +34,9 @@ protected:
     Gfx::Quad* quad;
     Rect* collRect;
 
+    int health;
     bool alive;
+    bool solid;
 
     virtual void UpdateCollRect() {
         collRect->Set(x, y, collRect->w, collRect->h);
@@ -47,18 +50,16 @@ public:
     Entity() {
         type = EntityType::Unknown;
         quad = new Gfx::Quad(-1);
+
+        health = 0;
+        solid = true;
         alive = true;
 
         collRect = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     ~Entity() {
-        if (quad->id >= 0) {
-            quad->SetRect(0, 0, 0, 0);
-            quad->BufferData();
-        }
         delete quad;
-
         delete collRect;
     }
 
@@ -100,6 +101,13 @@ public:
     virtual void OnEntityCollision(Entity* other, float dx, float dy) {
         x -= dx;
         y -= dy;
+    }
+
+    virtual void Hurt(int damage) {
+        health -= damage; 
+
+        if (health <= 0)
+            alive = false;
     }
 
     virtual void Tick(float dt) { }
@@ -153,6 +161,8 @@ public:
         vector<Entity*>* ents = new vector<Entity*>();
 
         std::for_each(entities.begin(), entities.end(), [=](Entity*& e) {
+            if (!e->solid) return;
+
             float dx = (e->x - x);
             float dy = (e->y - y);
 
@@ -217,10 +227,10 @@ World* loadWorld(string path) {
             unsigned int col = pxdata[x + y * img->w];
 
             if (col == 0xff000000) {
-                tm->SetTile(x, y, GrassTile::id);
+                tm->SetTile(x, y, FloorTile::id);
             }
             else if (col == 0xffffffff) {
-                tm->SetTile(x, y, StoneTile::id);
+                tm->SetTile(x, y, WallTile::id);
             }
         }
     }

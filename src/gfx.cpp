@@ -350,6 +350,8 @@ Gfx::Quad::Quad(int id) {
 }
 
 Gfx::Quad::~Quad() {
+    SetRect(0, 0, 0, 0);
+    BufferData();
     delete[] this->renderData;
 }
 

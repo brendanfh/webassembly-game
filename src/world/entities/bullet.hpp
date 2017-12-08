@@ -44,7 +44,7 @@ public:
 
     void OnEntityCollision(Entity* ent, float dx, float dy) override {
         if (ent->GetType() == EntityType::Enemy) {
-            cout << "Hit enemy" << endl;
+            ent->Hurt(1);
         }
         Entity::OnEntityCollision(ent, dx, dy);
 

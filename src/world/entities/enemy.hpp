@@ -3,6 +3,7 @@
 #define PI 3.14159265
 
 #include "../world.hpp"
+#include "particles.hpp"
 
 #include <cstdlib>
 #include <cmath>
@@ -15,6 +16,8 @@ private:
     Animator* anim;
     Entity* target;
 
+    Gfx::Quad* healthBar;
+
 protected:
     void UpdateCollRect() override {
         collRect->Set(x + 3.0f/16.0f, y + 9.0f/16.0f, 11.0f/16.0f, 7.0f/16.0f);
@@ -26,6 +29,11 @@ public:
         quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         this->target = target;
+        health = 10;
+
+        healthBar = new Gfx::Quad(-1);
+        healthBar->SetSubTexture(31.0f, 31.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+        healthBar->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 
         x = 1.0f * (rand() % 11) + 4.0f;
         y = 1.0f * (rand() % 11);
@@ -45,6 +53,19 @@ public:
     ~Enemy() {
         Entity::~Entity();
         delete anim;
+        delete healthBar;
+    }
+
+    void Hurt(int damage) override {
+        Entity::Hurt(damage);
+        
+        if (!alive) {
+            //Spawn gore
+            for (int i = 0; i < 20; i++) {
+                GoreParticle* gore = new GoreParticle(x, y);
+                world->AddEntity(gore);
+            }
+        } 
     }
 
     void Tick(float dt) override {
@@ -82,6 +103,10 @@ public:
     void Render() override {
         anim->ApplyToQuad(quad);
         quad->BufferData(); 
+
+        healthBar->SetRect(x, y - 0.25f, 1.0f * (health / 10.f), 0.25f);
+        healthBar->id = 4000;
+        healthBar->BufferData();
     }
 };
 
