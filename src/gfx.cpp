@@ -340,6 +340,8 @@ void Gfx::UseTextureUnit(int tunit) {
 Gfx::Quad::Quad(int id) {
     this->id = id;
     this->offset = true;
+    this->flipX = false;
+    this->flipY = false;
     this->renderData = new GLfloat[4 * 8];
     for (int i = 0; i < 4 * 8; i++) {
         renderData[i] = 0.0f;
@@ -397,20 +399,59 @@ void Gfx::Quad::SetColor(float r, float g, float b, float a) {
     }
 }
 
+void Gfx::Quad::SetFlip(bool fx, bool fy) {
+    float x, y, w, h;
+    if (!flipX) {
+        x = renderData[8 * 0 + 2];
+        w = renderData[8 * 1 + 2] - x;
+    } else {
+        w = renderData[8 * 0 + 2] - renderData[8 * 1 + 2];
+        x = renderData[8 * 1 + 2];
+    }
+
+    if (!flipY) {
+        y = renderData[8 * 0 + 3];
+        h = renderData[8 * 2 + 3] - y;
+    } else {
+        h = renderData[8 * 0 + 3] - renderData[8 * 2 + 3];
+        y = renderData[8 * 2 + 3];
+    }
+
+    flipX = fx;
+    flipY = fy;
+
+    SetSubTexture(x, y, w, h, 1.0f, 1.0f);
+}
+
 void Gfx::Quad::SetSubTexture(float x, float y, float w, float h, float sw, float sh) {
     float x1 = x / sw;
     float y1 = y / sh;
     float x2 = (x + w) / sw;
     float y2 = (y + h) / sh;
 
-    renderData[8 * 0 + 2] = x1;
-    renderData[8 * 0 + 3] = y1;
-    renderData[8 * 1 + 2] = x2;
-    renderData[8 * 1 + 3] = y1;
-    renderData[8 * 2 + 2] = x2;
-    renderData[8 * 2 + 3] = y2;
-    renderData[8 * 3 + 2] = x1;
-    renderData[8 * 3 + 3] = y2;
+    if (!flipX) {
+        renderData[8 * 0 + 2] = x1;
+        renderData[8 * 1 + 2] = x2;
+        renderData[8 * 2 + 2] = x2;
+        renderData[8 * 3 + 2] = x1;
+    } else {
+        renderData[8 * 0 + 2] = x2;
+        renderData[8 * 1 + 2] = x1;
+        renderData[8 * 2 + 2] = x1;
+        renderData[8 * 3 + 2] = x2;
+    }
+
+    if (!flipY) {
+        renderData[8 * 0 + 3] = y1;
+        renderData[8 * 1 + 3] = y1;
+        renderData[8 * 2 + 3] = y2;
+        renderData[8 * 3 + 3] = y2;
+    } else {
+        renderData[8 * 0 + 3] = y2;
+        renderData[8 * 1 + 3] = y2;
+        renderData[8 * 2 + 3] = y1;
+        renderData[8 * 3 + 3] = y1;
+    }
 }
 
 void Gfx::Quad::SetUseOffset(bool off) {

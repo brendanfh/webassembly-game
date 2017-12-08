@@ -19,6 +19,8 @@ namespace Gfx {
     private:
         GLfloat* renderData;
         bool offset;
+        bool flipX;
+        bool flipY;
 
     public:
         int id;
@@ -31,6 +33,7 @@ namespace Gfx {
         void SetSize(float w, float h);
         void SetRect(float x, float y, float w, float h);
         void SetColor(float r, float g, float b, float a);
+        void SetFlip(bool fx, bool fy);
         void SetSubTexture(float x, float y, float w, float h, float sw, float sh);
         void SetUseOffset(bool off);
         void BufferData();

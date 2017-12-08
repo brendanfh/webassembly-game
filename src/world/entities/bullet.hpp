@@ -1,7 +1,7 @@
 #ifndef __BULLET_H_
 #define __BULLET_H_
 
-#include "world.hpp"
+#include "../world.hpp"
 
 #include <iostream>
 

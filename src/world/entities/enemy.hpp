@@ -2,7 +2,7 @@
 #define __ENEMY_H_
 #define PI 3.14159265
 
-#include "world.hpp"
+#include "../world.hpp"
 
 #include <cstdlib>
 #include <cmath>

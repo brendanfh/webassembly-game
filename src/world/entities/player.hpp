@@ -1,16 +1,20 @@
 #ifndef __PLAYER_H_
 #define __PLAYER_H_
 
-#include "../input.hpp"
-#include "../gfx.hpp"
-#include "../utils/animator.hpp"
-#include "world.hpp"
+#include "../../input.hpp"
+#include "../../gfx.hpp"
+#include "../../utils/animator.hpp"
+#include "../world.hpp"
 #include "bullet.hpp"
 
 #include <cmath>
 #include <iostream>
 
 using namespace std;
+
+class Inventory {
+
+};
 
 class Player : public Entity {
 private:

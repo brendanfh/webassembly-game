@@ -5,8 +5,8 @@
 
 #include "../gfx.hpp"
 #include "../input.hpp"
-#include "../world/player.hpp"
-#include "../world/enemy.hpp"
+#include "../world/entities/player.hpp"
+#include "../world/entities/enemy.hpp"
 #include "../world/world.hpp"
 #include "../world/tilemap.hpp"
 
@@ -14,6 +14,10 @@
 
 #include "../game.hpp"
 #include "pausestate.hpp"
+
+class PlayStateGui {
+
+};
 
 class PlayState : public GameState {
     World* world;
