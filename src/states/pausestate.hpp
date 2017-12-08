@@ -5,8 +5,10 @@
 #include "../game.hpp"
 
 class PauseState : public GameState {
+    GameState* pstate;
 public:
-    PauseState() : GameState() {
+    PauseState(GameState* ps) : GameState() {
+        pstate = ps;
     }
     
     void Init() override { }
@@ -22,7 +24,7 @@ public:
     }
     
     void Render() override {
-        //parent->Render(); 
+        pstate->Render();
         Gfx::SetOffset(0, 0);
         
         Gfx::DrawRect(2000, 0, 0, Gfx::width, Gfx::height, 0, 0, 0, 0.7f);

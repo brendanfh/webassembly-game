@@ -7,14 +7,10 @@
 #include <iostream>
 #include <stack>
 
+#include "gfx.hpp"
+
 using namespace std;
 
-#include "gfx.hpp"
-#include "input.hpp"
-#include "world/entities/player.hpp"
-#include "world/entities/enemy.hpp"
-#include "world/world.hpp"
-#include "world/tilemap.hpp"
 
 class GameTimer {
 private:
@@ -55,10 +51,13 @@ public:
 class Game {
 private:
     static stack<GameState*> states;
+
     GameTimer* timer;
     Gfx::Texture* mainTexture;
 
 public:
+    static int UPDATES;
+
     Game();
     ~Game();
     
@@ -71,10 +70,17 @@ public:
 };
 
 //Include states here because the game class has actaully been defined now
+#include "input.hpp"
+#include "world/entities/player.hpp"
+#include "world/entities/enemy.hpp"
+#include "world/world.hpp"
+#include "world/tilemap.hpp"
 #include "states/playstate.hpp"
 #include "states/pausestate.hpp"
 
 stack<GameState*> Game::states;
+int Game::UPDATES;
+
 Game::Game() {
     Gfx::Initialize();
     Keys::Initialize();
@@ -115,6 +121,7 @@ void Game::Tick() {
     if (states.empty()) return;
 
     float dt = (float) timer->GetDt();
+    Game::UPDATES++;
 
     Game::states.top()->Tick(dt);
 

@@ -8,8 +8,6 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
 
 class World;
 class Entity;
@@ -121,6 +119,7 @@ private:
 
 public:
     friend World* loadWorld(string path);
+    Entity* player;
 
     World() {
         entities = vector<Entity*>();
@@ -141,6 +140,9 @@ public:
 
     void AddEntity(Entity* entity) {
         entity->world = this;
+        if (entity->type == EntityType::Player) {
+            player = entity;
+        }
         entities.push_back(entity);
     }
 
@@ -209,36 +211,6 @@ public:
         }
     }
 };
-
-World* loadWorld(string path) {
-    SDL_Surface* img;
-    if (!(img = IMG_Load(path.c_str()))) {
-        cout << "Failed to load world " << path << endl;
-        return NULL;
-    }
-
-    Tilemap* tm = new Tilemap(img->w, img->h);
-    World* w = new World();
-
-    unsigned int* pxdata = (unsigned int*)img->pixels;
-
-    for (int y = 0; y < img->h; y++) {
-        for (int x = 0; x < img->w; x++) {
-            unsigned int col = pxdata[x + y * img->w];
-
-            if (col == 0xff000000) {
-                tm->SetTile(x, y, FloorTile::id);
-            }
-            else if (col == 0xffffffff) {
-                tm->SetTile(x, y, WallTile::id);
-            }
-        }
-    }
-
-    w->tilemap = tm;
-
-    return w;
-}
 
 //This has to be at the bottom because it references "RectsInRange", which has not been defined at the top yet.
 void Entity::Move(float dx, float dy, int steps) {

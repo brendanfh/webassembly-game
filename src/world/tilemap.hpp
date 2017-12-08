@@ -2,6 +2,7 @@
 #define __TILEMAP_H_
 
 #include "../gfx.hpp"
+#include "../game.hpp"
 
 #include <vector>
 
@@ -81,11 +82,57 @@ public:
     }
 };
 
+class LavaTile : public Tile {
+public:
+    static const int id = 2;
+
+    int frame = 0;
+
+    LavaTile() : Tile(LavaTile::id) {
+        quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+        quad->SetSubTexture(0.0f, 11.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+    }
+
+    void Render(int id, int x, int y) override {
+        int u = Game::UPDATES;
+        u /= 43;
+        if (u % 4 != frame) {
+            frame = u % 4;
+            quad->SetSubTexture((-abs(frame - 2) + 2) * 1.0f, 11.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+        }
+        Tile::Render(id, x, y);
+    }
+};
+
+class WaterTile : public Tile {
+public:
+    static const int id = 3;
+
+    int frame = 0;
+
+    WaterTile() : Tile(WaterTile::id) {
+        quad->SetColor(0.0f, 0.9f, 0.7f, 1.0f);
+        quad->SetSubTexture(0.0f, 12.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+    }
+
+    void Render(int id, int x, int y) override {
+        int u = Game::UPDATES;
+        u /= 21;
+        if (u % 4 != frame) {
+            frame = u % 4;
+            quad->SetSubTexture((-abs(frame - 2) + 2) * 1.0f, 12.0f, 1.0f, 1.0f, 32.0f, 32.0f);
+        }
+        Tile::Render(id, x, y);
+    }
+};
+
 void Tile::Initialize() {
     Tiles = new vector<Tile*>(100);
 
     new FloorTile();
     new WallTile();
+    new LavaTile();
+    new WaterTile();
 }
 
 void Tile::Uninitialize() {

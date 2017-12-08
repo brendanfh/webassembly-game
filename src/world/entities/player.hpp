@@ -103,7 +103,6 @@ public:
             Move(dx, dy, 10);
 
             anim->Tick(dt);
-            UpdateDrawRects();
         }
     }
 
@@ -113,6 +112,7 @@ public:
     //}
 
     void Render() override { 
+        UpdateDrawRects();
         anim->ApplyToQuad(quad);
         quad->BufferData(); 
     }

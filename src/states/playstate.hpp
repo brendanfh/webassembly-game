@@ -11,6 +11,7 @@
 #include "../world/tilemap.hpp"
 
 #include "../utils/font.hpp"
+#include "../utils/worldLoader.hpp"
 
 #include "../game.hpp"
 #include "pausestate.hpp"
@@ -21,16 +22,12 @@ class PlayStateGui {
 
 class PlayState : public GameState {
     World* world;
-    Player* ply;
+    Entity* ply;
 
 public:
     PlayState() : GameState() {
         world = loadWorld("res/map.png");
-        
-        ply = new Player();
-        world->AddEntity(ply);
-
-        world->AddEntity(new Enemy(ply));
+        ply = world->player;
     }
     
     ~PlayState() {
@@ -40,7 +37,7 @@ public:
     void Tick(float dt) override {
         world->Tick(dt); 
         if (Keys::IsJustDown(GLFW_KEY_P)) {
-            Game::AddState(new PauseState());
+            Game::AddState(new PauseState(this));
         }
     }
     

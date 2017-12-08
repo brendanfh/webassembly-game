@@ -65,7 +65,8 @@ public:
 
 		dz += 6.0f * dt;
 		if (z > 0) {
-			alive = false;
+			if (randf(0.0f, 1.0f) > 0.8f)
+				alive = false;
 		}
 	}
 };

@@ -24,7 +24,7 @@ protected:
     }
 
 public:
-    Enemy(Entity* target) : Entity() {
+    Enemy(float x, float y, Entity* target) : Entity() {
         type = EntityType::Enemy;
         quad->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
         
@@ -35,8 +35,8 @@ public:
         healthBar->SetSubTexture(31.0f, 31.0f, 1.0f, 1.0f, 32.0f, 32.0f);
         healthBar->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-        x = 1.0f * (rand() % 11) + 4.0f;
-        y = 1.0f * (rand() % 11);
+        this->x = x;
+        this->y = y;
 
         quad->SetRect(x, y, 1.0f, 1.0f);
 
