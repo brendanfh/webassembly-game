@@ -25,25 +25,30 @@ World* loadWorld(string path) {
     for (int y = 0; y < img->h; y++) {
         for (int x = 0; x < img->w; x++) {
             unsigned int col = pxdata[x + y * img->w];
-            int r = col >> 16 & 0xff;
+            int r = col >> 0 & 0xff;
             int g = col >> 8 & 0xff;
-            int b = col >> 0 & 0xff;
+            int b = col >> 16 & 0xff;
+            col = r << 16 | g << 8 | b;
             tm->SetTile(x, y, FloorTile::id);
 
-            if (col == 0xffffffff) {
+            if (col == 0xffffff) {
                 tm->SetTile(x, y, WallTile::id);
             }
-            else if (col == 0xffff0000) {
+            else if (col == 0x0000ff) {
                 player->x = x * TILE_SIZE;
                 player->y = y * TILE_SIZE;
             }
-            else if (col == 0xff00ffff) {
+            else if (col == 0xffff00) {
             	tm->SetTile(x, y, LavaTile::id);
             }
-            else if (col == 0xffffff00) {
+            else if (col == 0x00ffff) {
             	tm->SetTile(x, y, WaterTile::id);
             }
-            else if (col == 0xfffe0000) {
+            else if (r == 0xff) {
+                tm->SetTile(x, y, DoorTile::id);
+                tm->SetData(x, y, g << 4 | b);
+            }
+            else if (col == 0x0000fe) {
                 w->AddEntity(new Enemy(x * TILE_SIZE, y * TILE_SIZE, player));
             }
         }

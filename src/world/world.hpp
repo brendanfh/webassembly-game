@@ -4,6 +4,7 @@
 #include "../gfx.hpp"
 #include "../utils/rect.hpp"
 #include "tilemap.hpp"
+#include "../utils/idmanager.hpp"
 
 #include <iostream>
 #include <vector>
@@ -203,10 +204,11 @@ public:
         });
 
         //Tilemap::Render returns how many ids it used
-        int tt = tilemap->Render(0, px, py);
+        IdMng::Use(0);
+        tilemap->Render(px, py);
 
         for (int i = 0; i < entities.size(); i++) {
-            entities[i]->SetRenderOrder(i + tt + 1);
+            entities[i]->SetRenderOrder(IdMng::Next());
             entities[i]->Render();
         }
     }

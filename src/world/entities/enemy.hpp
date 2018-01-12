@@ -3,6 +3,7 @@
 #define PI 3.14159265
 
 #include "../world.hpp"
+#include "../../utils/idmanager.hpp"
 #include "particles.hpp"
 
 #include <cstdlib>
@@ -51,6 +52,7 @@ public:
     }
 
     ~Enemy() {
+        Gfx::ClearData(quad->id, 2);
         Entity::~Entity();
         delete anim;
         delete healthBar;
@@ -105,7 +107,7 @@ public:
         quad->BufferData(); 
 
         healthBar->SetRect(x, y - 0.25f, 1.0f * (health / 10.f), 0.25f);
-        healthBar->id = 4000;
+        healthBar->id = IdMng::Next();
         healthBar->BufferData();
     }
 };

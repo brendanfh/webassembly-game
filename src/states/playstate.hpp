@@ -26,7 +26,7 @@ class PlayState : public GameState {
 
 public:
     PlayState() : GameState() {
-        world = loadWorld("res/map.png");
+        world = loadWorld("res/fullmap.png");
         ply = world->player;
     }
     
